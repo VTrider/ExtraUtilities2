@@ -219,6 +219,47 @@ enum TEAMRELATIONSHIP
 	TEAMRELATIONSHIP_ENEMYTEAM, // Team # isn't identical, and teams are enemies
 };
 
+// Damage Type used by the DAMAGE struct below.
+typedef unsigned char byte;
+enum DAMAGE_TYPE : byte
+{
+	DAMAGE_TYPE_UNKNOWN,
+	DAMAGE_TYPE_ORDNANCE,
+	DAMAGE_TYPE_EXPLOSION,
+	DAMAGE_TYPE_COLLISION,
+	DAMAGE_TYPE_WATER,
+	DAMAGE_TYPE_UNDERWATER,
+	DAMAGE_TYPE_SCRIPT,
+	DAMAGE_TYPE_LAST // must be last
+};
+
+// damage structure
+struct DAMAGE
+{
+	int owner;		// handle of damage owner
+	int source;		// handle of damaging object
+	float base;		// base damage done
+	float armor;	// armor scale factor
+	float shield;	// shield scale factor
+	float value;	// damage value to apply
+	DAMAGE_TYPE damageType;
+	bool m_SelfDamage;
+	bool m_FriendlyFireDamage; // Whether friendly fire counts or not
+
+	// Default constructor: clear everything
+	DAMAGE() {
+		owner = 0;		// handle of damage owner
+		source = 0;		// handle of damaging object
+		base = 0;		// base damage done
+		armor = 0;		// armor scale factor
+		shield = 0;		// shield scale factor
+		value = 0;		// damage value to apply
+		damageType = DAMAGE_TYPE_UNKNOWN;
+		m_SelfDamage = false;
+		m_FriendlyFireDamage = false;
+	}
+};
+
 #endif
 
 typedef char* Name;
@@ -282,6 +323,14 @@ struct SpawnpointInfo
 	float	m_DistanceToClosestEnemy;
 };
 
+// Typedef for PostBulletInit callback. Is passed the shooter handle, 
+// the initial Matrix, initial Velocity, ordnance's team #, and also 
+// the ODF string of the ordnance involved.
+typedef void(DLLAPI *PostBulletInitCallback)(Handle shooterHandle, const Matrix &ordnanceMat, const Vector &ordnanceVel, int ordnanceTeam, float ordnanceLifespan, const char* pOrdnanceODF);
+
+// Typedef for PreDamag callback. Is passed the victim handle, and 
+// a reference damage struct that can be modified.
+typedef void (DLLAPI *PreDamageCallback)(const int curWorld, Handle h, const char* pContext, DAMAGE &dmg);
 
 // Typedef for the PreSnipe callback. Is passed the current world
 // (0=lockstep, 1 or 2 = visual world), two handles (shooter and
@@ -292,7 +341,7 @@ typedef PreSnipeReturnCodes (DLLAPI *PreSnipeCallback)(const int curWorld, Handl
 
 // Typedef for the PreOrdnanceHit callback. Is passed two handles
 // (shooter and victim), and also the ODF string of the ordnance
-// involved in the snipe. Returns nothing.
+// involved. Returns nothing.
 typedef void (DLLAPI *PreOrdnanceHitCallback)(Handle shooterHandle, Handle victimHandle, int ordnanceTeam, const char* pOrdnanceODF);
 
 
@@ -409,6 +458,8 @@ struct MisnExport2
 	PreOrdnanceHitCallback		m_pPreOrdnanceHitCallback;
 	PrePickupPowerupCallback	m_pPrePickupPowerupCallback;
 	PreSnipeCallback			m_pPreSnipeCallback;
+	PostBulletInitCallback		m_pPostBulletInitCallback;
+	PreDamageCallback			m_pPreDamageCallback;
 
 	// Constructor - sets all callbacks to unsubscribed
 	MisnExport2()
@@ -419,6 +470,8 @@ struct MisnExport2
 		m_pPreOrdnanceHitCallback = NULL;
 		m_pPrePickupPowerupCallback = NULL;
 		m_pPreSnipeCallback = NULL;
+		m_pPostBulletInitCallback = NULL;
+		m_pPreDamageCallback = NULL;
 	}
 };
 
@@ -2375,6 +2428,28 @@ DLLEXPORT void DLLAPI PetWatchdogThread(void);
 DLLEXPORT TeamNum DLLAPI GetPerceivedTeam(Handle h);
 
 // Callback to set item in MisnExport2 - notes that the DLL would like
+// to set a PostBulletInit callback. This may by NULL if the DLL does not
+// want to subscribe to these callbacks. DLLs do NOT have to
+// unregister themselves before unloading; when the DLL is unloaded by
+// bzone.exe/bz2edit.exe, all callbacks are automatically cleared.
+//
+// Note that the shooters handle *should* be valid -- but just in case, 
+// the ordnance's team is also passed as a possible fallback for identification.
+//
+DLLEXPORT void DLLAPI SetPostBulletInitCallback(PostBulletInitCallback callback);
+
+// Callback to set item in MisnExport2 - notes that the DLL would like
+// to set a PreDamage callback. This may by NULL if the DLL does not
+// want to subscribe to these callbacks. DLLs do NOT have to
+// unregister themselves before unloading; when the DLL is unloaded by
+// bzone.exe/bz2edit.exe, all callbacks are automatically cleared.
+//
+// Note that the shooters handle *should* be valid -- but just in case, 
+// the ordnance's team is also passed as a possible fallback for identification.
+//
+DLLEXPORT void DLLAPI SetPreDamageCallback(PreDamageCallback callback);
+
+// Callback to set item in MisnExport2 - notes that the DLL would like
 // to set a PreSnipe callback. This may by NULL if the DLL does not
 // want to subscribe to these callbacks. DLLs do NOT have to
 // unregister themselves before unloading; when the DLL is unloaded by
@@ -2916,5 +2991,32 @@ DLLEXPORT void DLLAPI IFace_FadeOut(ConstName n);
 
 // Is Menu mode
 DLLEXPORT bool DLLAPI IFace_IsMenuMode(void);
+
+// Returns the current Health of a handle, even dead handles. Returns -2147483648 if the handle is invalid.
+DLLEXPORT long DLLAPI GetCurHealth2(Handle h);
+
+// Tells if a unit was Around. Similar to IsAround(), but returns true on Dead but not fully Removed objects.
+DLLEXPORT bool DLLAPI WasAround(Handle h);
+
+// NOTE: These GetProfile___ functions are NOT MP safe. Do not modify anything in the world 
+// based on results from these functions.
+
+// Returns the name string of the current player profile.
+DLLEXPORT const char* DLLAPI GetProfileName(void);
+
+// Returns the mission number of the current player profile.
+DLLEXPORT int DLLAPI GetProfileMission(void);
+
+// Returns the side of the current player profile.
+DLLEXPORT int DLLAPI GetProfileSide(void);
+
+// Returns if the Cheat is currently active.
+DLLEXPORT bool DLLAPI GetProfileCheatAmmo(void);
+DLLEXPORT bool DLLAPI GetProfileCheatArmor(void);
+DLLEXPORT bool DLLAPI GetProfileCheatScrap(void);
+DLLEXPORT bool DLLAPI GetProfileCheatSatellite(void);
+DLLEXPORT bool DLLAPI GetProfileCheatRadar(void);
+DLLEXPORT bool DLLAPI GetProfileCheatEdit(void);
+
 
 #endif

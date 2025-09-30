@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ExtraUtils.h" />
+    <ClInclude Include="include\Offsets.h" />
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\BasicScanner.h" />
     <ClInclude Include="src\BZCC.h" />

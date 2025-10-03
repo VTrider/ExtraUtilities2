@@ -14,6 +14,7 @@
 
 namespace exu2
 {
+	constexpr const char* versionString = "1.0.0";
 	// The following functions are used in ProcessCommand(long crc):
 
 	// Gets the count of arguments supplied to the current command

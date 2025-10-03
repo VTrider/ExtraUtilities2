@@ -91,7 +91,7 @@ namespace exu2
 
 	static void RegisterConstants(lua_State* L)
 	{
-		lua_pushstring(L, "1.0.0");
+		lua_pushstring(L, versionString);
 		lua_setfield(L, -2, "VERSION");
 	}
 

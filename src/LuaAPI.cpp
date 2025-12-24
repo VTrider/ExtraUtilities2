@@ -8,6 +8,20 @@
 
 namespace exu2
 {
+	// Can't implement: lacking W in matrix
+	static int GetPerspectiveMatrix(lua_State* L)
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+
+	// Not really useful on it's own without the perspective matrix
+	static int GetViewMatrix(lua_State* L)
+	{
+		lua_pushnil(L);
+		return 1;
+	}
+
 	static int IFace_GetArgCount(lua_State* L)
 	{
 		int count = IFace_GetArgCount();
@@ -81,6 +95,20 @@ namespace exu2
 		bool result = IFace_DeleteItem(name);
 		lua_pushboolean(L, result);
 		return 1;
+	}
+
+	static int VarSys_RegisterHandler(lua_State* L)
+	{
+		// Probably not able to be bound in lua due to function differences
+		ConstName name = luaL_checkstring(L, 1);
+		unsigned long magic = luaL_checklong(L, 3);
+		VarSys_RegisterHandler(name, nullptr, magic);
+		return 0;
+	}
+
+	static int VarSys_CreateCmd(lua_State* L)
+	{
+
 	}
 
 	static int GetSteam64(lua_State* L)

@@ -15,7 +15,18 @@
 namespace exu2
 {
 	constexpr const char* versionString = "1.0.0";
+
 	// The following functions are used in ProcessCommand(long crc):
+
+	using VarSysHandler = void(__cdecl*)(unsigned long crc);
+
+	// Returns the current perspective projection matrix
+	EXUAPI Matrix DLLAPI GetPerspectiveMatrix();
+
+	EXUAPI Vector DLLAPI WorldToScreen(const Vector& worldPosition);
+
+	// Returns the current view matrix 
+	EXUAPI Matrix DLLAPI GetViewMatrix();
 
 	// Gets the count of arguments supplied to the current command
 	// note that it also includes the name of the command, so it will always
@@ -36,9 +47,20 @@ namespace exu2
 	// Gets a string value at the given position if it exists
 	EXUAPI bool DLLAPI IFace_GetArgString(int arg, char** value);
 
+	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
+	// it will not seen by the current mission's ProcessCommand function. You can use VarSys_RegisterHandler to set
+	// a custom handler that can even work outside of a game. WARNING: these commands are NODELETE by default
+	// and I don't know why, so this function probably isn't too useful.
+	EXUAPI void DLLAPI VarSys_CreateCmd(ConstName name);
+
 	// Deletes an IFace item and all its subdirectories, returns true if
 	// successful, or false if the item does not exist
 	EXUAPI bool DLLAPI IFace_DeleteItem(ConstName name);
+
+	// Registers a handler for a VarSys scope, ie. in a command "exu.stuff.function", "exu" and "stuff" are both
+	// considered a scope. The handler is a function that follows the same API as ProcessCommand in ScriptUtils.
+	// The magic number is usually 0 in the game's code so I recommend passing that in, anything else is untested.
+	EXUAPI void DLLAPI VarSys_RegisterHandler(ConstName name, VarSysHandler handler, unsigned long magic);
 
 	// Gets the Steam 64 ID of the local user
 	EXUAPI uint64_t DLLAPI GetSteam64();

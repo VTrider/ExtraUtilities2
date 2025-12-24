@@ -695,6 +695,7 @@ DLLEXPORT void DLLAPI GetIn(Handle me, Handle him, int priority = 1);
 DLLEXPORT void DLLAPI Pickup(Handle me, Handle him, int priority = 1);
 
 // Dropoff(tug1, "return_path");
+// It actually orders CMD_DEPLOY, not CMD_DROPOFF, for constructors (See below)
 DLLEXPORT void DLLAPI Dropoff(Handle me, ConstName path, int priority = 1);
 
 // Build(rig, "sbsilo");
@@ -2612,7 +2613,7 @@ DLLEXPORT long DLLAPI GetWeaponMask(Handle h);
 
 // Variants of Mine/Retreat/Dropoff that take a position, not a path
 // Note: Like Goto() variant, the Y component of the position passed
-// in is ignored.
+// in is ignored. Dropoff actually sets CMD_DEPLOY (for constructors)
 DLLEXPORT void DLLAPI Mine(Handle me, const Vector& pos, int priority = 1);
 DLLEXPORT void DLLAPI Dropoff(Handle me, const Vector& pos, int priority = 1);
 
@@ -3018,5 +3019,23 @@ DLLEXPORT bool DLLAPI GetProfileCheatSatellite(void);
 DLLEXPORT bool DLLAPI GetProfileCheatRadar(void);
 DLLEXPORT bool DLLAPI GetProfileCheatEdit(void);
 
+// Radar Visibility Methods
+// Visibility is if an object is currently visible on radar.
+// Seen is if the object has ever been seen on radar before.
+// Visibility methods set both Visible and Seen values.
+DLLEXPORT bool DLLAPI IsVisibleTo(Handle h, int team);
+DLLEXPORT void DLLAPI SetVisibleTo(Handle h, int team, bool visible);
+DLLEXPORT void DLLAPI ClearVisibility(Handle h);
+// Seen methods set only the Seen value.
+DLLEXPORT bool DLLAPI HasBeenSeenBy(Handle h, int team);
+DLLEXPORT void DLLAPI SetSeenTo(Handle h, int team, bool visible);
+DLLEXPORT void DLLAPI ClearSeen(Handle h);
+
+// Versions of Dropoff that actually set CMD_DROPOFF.
+DLLEXPORT void DLLAPI Dropoff2(Handle me, ConstName path, int priority = 1);
+DLLEXPORT void DLLAPI Dropoff2(Handle me, const Vector& pos, int priority = 1);
+
+// Get the magnitude of the currently active Quake
+DLLEXPORT float DLLAPI GetEarthQuakeMagnitude(void);
 
 #endif

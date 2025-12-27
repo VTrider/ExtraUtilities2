@@ -290,6 +290,9 @@ typedef DWORD DPID;
 #define CTRL_EJECT (1<<6)
 #define CTRL_ABANDON (1<<7)
 #define CTRL_FIRE (1<<8)
+#define CTRL_NEXT (1<<9)
+#define CTRL_PREV (1<<10)
+#define CTRL_SPECIAL (1<<11)
 
 struct VehicleControls {
 	float braccel;
@@ -301,6 +304,9 @@ struct VehicleControls {
 	char eject;
 	char abandon;
 	char fire;
+	char next;
+	char prev;
+	char special;
 };
 
 // Structure for GetAllSpawnpoints
@@ -3037,5 +3043,35 @@ DLLEXPORT void DLLAPI Dropoff2(Handle me, const Vector& pos, int priority = 1);
 
 // Get the magnitude of the currently active Quake
 DLLEXPORT float DLLAPI GetEarthQuakeMagnitude(void);
+
+// Sets the model name.
+DLLEXPORT void DLLAPI IFace_SetViewerModel(ConstName name, const char *model);
+
+// Sets the model animation
+DLLEXPORT void DLLAPI IFace_SetViewerAnim(ConstName name, const char *anim);
+
+// Sets the model ambient color
+DLLEXPORT void DLLAPI IFace_SetViewerAmbientColor(ConstName name, const float r, const float g, const float b);
+
+// Sets the model diffuse color
+DLLEXPORT void DLLAPI IFace_SetViewerDiffuseColor(ConstName name, const float r, const float g, const float b);
+
+// Sets the model diffuse color
+DLLEXPORT void DLLAPI IFace_SetViewerDiffuseDir(ConstName name, const float x, const float y, const float z);
+
+// Sets the model distance
+DLLEXPORT void DLLAPI IFace_SetViewerModelDistance(ConstName name, const float dist);
+
+// Sets the model  inclination
+DLLEXPORT void DLLAPI IFace_SetViewerModelInclination(ConstName name, const float angle);
+
+// Sets the model rotation speed
+DLLEXPORT void DLLAPI IFace_SetViewerModelRotation(ConstName name, const float rotation);
+
+// Sets the model rotation limits
+DLLEXPORT void DLLAPI IFace_SetViewerModelAngleLimits(ConstName name, const float min, const float max);
+
+// Gets which controls are currently set by the handle. Returns all blank controls (0's) if not a valid handle or not a craft.
+DLLEXPORT VehicleControls DLLAPI GetControls(Handle h);
 
 #endif

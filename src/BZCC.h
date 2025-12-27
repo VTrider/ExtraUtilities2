@@ -6,9 +6,6 @@
 #include <Windows.h>
 
 #include <cstdint>
-#include <exception>
-#include <format>
-#include <sstream>
 
 namespace BZCC
 {

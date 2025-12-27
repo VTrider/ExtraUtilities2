@@ -14,6 +14,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\LuaAPI.cpp" />
     <ClCompile Include="src\Steam.cpp" />
     <ClCompile Include="src\VarSys.cpp" />
@@ -27,6 +28,7 @@
     <ClInclude Include="src\Hook.h" />
     <ClInclude Include="src\InlinePatch.h" />
     <ClInclude Include="src\LuaHelpers.h" />
+    <ClInclude Include="src\MathUtils.h" />
     <ClInclude Include="src\Scanner.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -64,7 +66,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;EXTRAUTILITIES2_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);EXU_EXPORTS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -77,6 +79,7 @@
       <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,7 +94,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -106,6 +109,7 @@
       <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

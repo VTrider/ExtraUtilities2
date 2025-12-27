@@ -1,4 +1,5 @@
 #include "ExtraUtils.h"
+#include "LuaHelpers.h"
 
 #include <lua.hpp>
 
@@ -8,17 +9,31 @@
 
 namespace exu2
 {
-	// Can't implement: lacking W in matrix
 	static int GetPerspectiveMatrix(lua_State* L)
 	{
-		lua_pushnil(L);
+		PushMatrix(L, GetPerspectiveMatrix());
 		return 1;
 	}
 
-	// Not really useful on it's own without the perspective matrix
+	static int WorldToScreen(lua_State* L)
+	{
+		Vector worldPos = CheckVectorOrSingles(L, 1);
+		Vector screenPos;
+		if (WorldToScreen(worldPos, &screenPos))
+		{
+			PushVector(L, screenPos);
+		}
+		else
+		{
+			lua_pushnil(L);
+		}
+
+		return 1;
+	}
+
 	static int GetViewMatrix(lua_State* L)
 	{
-		lua_pushnil(L);
+		PushMatrix(L, GetViewMatrix());
 		return 1;
 	}
 
@@ -96,7 +111,7 @@ namespace exu2
 		lua_pushboolean(L, result);
 		return 1;
 	}
-
+/*
 	static int VarSys_RegisterHandler(lua_State* L)
 	{
 		// Probably not able to be bound in lua due to function differences
@@ -106,9 +121,20 @@ namespace exu2
 		return 0;
 	}
 
-	static int VarSys_CreateCmd(lua_State* L)
+	static int VarSys_CreateCmd([[maybe_unused]] lua_State* L)
 	{
 
+	}
+*/
+
+	static int GetViewportSize(lua_State* L)
+	{
+		auto viewport = GetViewportSize();
+
+		lua_pushinteger(L, viewport.first);
+		lua_pushinteger(L, viewport.second);
+
+		return 2;
 	}
 
 	static int GetSteam64(lua_State* L)
@@ -126,11 +152,15 @@ namespace exu2
 	extern "C" __declspec(dllexport) int luaopen_ExtraUtilities2(lua_State* L)
 	{
 		constexpr luaL_Reg EXPORT_TABLE[] = {
+			EXPORT(GetPerspectiveMatrix)
+			EXPORT(WorldToScreen)
+			EXPORT(GetViewMatrix)
 			EXPORT(IFace_GetArgCount)
 			EXPORT(IFace_GetArgFloat)
 			EXPORT(IFace_GetArgInteger)
 			EXPORT(IFace_GetArgString)
 			EXPORT(IFace_DeleteItem)
+			EXPORT(GetViewportSize)
 			EXPORT(GetSteam64)
 			{ 0, 0 }
 		};

@@ -11,22 +11,33 @@
 #include <Windows.h>
 
 #include <cstdint>
+#include <tuple>
 
 namespace exu2
 {
 	constexpr const char* versionString = "1.0.0";
-
-	// The following functions are used in ProcessCommand(long crc):
+	constexpr const char* gameVersion = "2.0.204";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
+
+	// Camera
+
+	// Perspective functions warning: don't use the built in matrix functions,
+	// they only work on the 3x3 portion of the matrix, perspective transformations
+	// require 4x4, and you need vec4's with a W component 
 
 	// Returns the current perspective projection matrix
 	EXUAPI Matrix DLLAPI GetPerspectiveMatrix();
 
-	EXUAPI Vector DLLAPI WorldToScreen(const Vector& worldPosition);
+	// Fills outScreen with normalized screen coordinates [0,1] that correspond to a position in the world.
+	// The z component is the depth, larger values are closer to the camera.
+	// Returns true if the position is visible, otherwise false.
+	EXUAPI bool DLLAPI WorldToScreen(const Vector& worldPosition, Vector* outScreen);
 
 	// Returns the current view matrix 
 	EXUAPI Matrix DLLAPI GetViewMatrix();
+
+	// Console
 
 	// Gets the count of arguments supplied to the current command
 	// note that it also includes the name of the command, so it will always
@@ -47,6 +58,17 @@ namespace exu2
 	// Gets a string value at the given position if it exists
 	EXUAPI bool DLLAPI IFace_GetArgString(int arg, char** value);
 
+	// Graphics
+
+	EXUAPI std::pair<size_t, size_t> GetViewportSize();
+
+	// Steam
+
+	// Gets the Steam 64 ID of the local user
+	EXUAPI uint64_t DLLAPI GetSteam64();
+
+	// VarSys
+
 	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
 	// it will not seen by the current mission's ProcessCommand function. You can use VarSys_RegisterHandler to set
 	// a custom handler that can even work outside of a game. WARNING: these commands are NODELETE by default
@@ -61,9 +83,6 @@ namespace exu2
 	// considered a scope. The handler is a function that follows the same API as ProcessCommand in ScriptUtils.
 	// The magic number is usually 0 in the game's code so I recommend passing that in, anything else is untested.
 	EXUAPI void DLLAPI VarSys_RegisterHandler(ConstName name, VarSysHandler handler, unsigned long magic);
-
-	// Gets the Steam 64 ID of the local user
-	EXUAPI uint64_t DLLAPI GetSteam64();
 
 	// Same as the lua function
 	inline int GetTPS()

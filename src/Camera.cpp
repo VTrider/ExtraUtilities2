@@ -11,6 +11,11 @@ namespace exu2
 		return BZCC::Camera::mainCamera->perspective;
 	}
 
+	EXUAPI Matrix DLLAPI GetViewMatrix()
+	{
+		return BZCC::Camera::mainCamera->view;
+	}
+
 	EXUAPI bool DLLAPI WorldToScreen(const Vector& worldPosition, Vector* outScreen)
 	{
 		using namespace BZCC;
@@ -42,10 +47,5 @@ namespace exu2
 		{
 			return false;
 		}
-	}
-
-	EXUAPI Matrix DLLAPI GetViewMatrix()
-	{
-		return BZCC::Camera::mainCamera->view;
 	}
 }

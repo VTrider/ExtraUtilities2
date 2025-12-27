@@ -20,6 +20,11 @@ namespace exu2
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
 
+	struct iVector2
+	{
+		int x, y;
+	};
+
 	// Camera
 
 	// Perspective functions warning: don't use the built in matrix functions,
@@ -29,13 +34,13 @@ namespace exu2
 	// Returns the current perspective projection matrix
 	EXUAPI Matrix DLLAPI GetPerspectiveMatrix();
 
+	// Returns the current view matrix 
+	EXUAPI Matrix DLLAPI GetViewMatrix();
+
 	// Fills outScreen with normalized screen coordinates [0,1] that correspond to a position in the world.
 	// The z component is the depth, larger values are closer to the camera.
 	// Returns true if the position is visible, otherwise false.
 	EXUAPI bool DLLAPI WorldToScreen(const Vector& worldPosition, Vector* outScreen);
-
-	// Returns the current view matrix 
-	EXUAPI Matrix DLLAPI GetViewMatrix();
 
 	// Console
 
@@ -60,7 +65,8 @@ namespace exu2
 
 	// Graphics
 
-	EXUAPI std::pair<size_t, size_t> GetViewportSize();
+	// Gets the current viewport size in pixels (X, Y)
+	EXUAPI iVector2 GetViewportSize();
 
 	// Steam
 
@@ -72,7 +78,7 @@ namespace exu2
 	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
 	// it will not seen by the current mission's ProcessCommand function. You can use VarSys_RegisterHandler to set
 	// a custom handler that can even work outside of a game. WARNING: these commands are NODELETE by default
-	// and I don't know why, so this function probably isn't too useful.
+	// and I don't know why, so this function probably isn't too useful. UNABLE TO BE BOUND IN LUA
 	EXUAPI void DLLAPI VarSys_CreateCmd(ConstName name);
 
 	// Deletes an IFace item and all its subdirectories, returns true if
@@ -82,6 +88,7 @@ namespace exu2
 	// Registers a handler for a VarSys scope, ie. in a command "exu.stuff.function", "exu" and "stuff" are both
 	// considered a scope. The handler is a function that follows the same API as ProcessCommand in ScriptUtils.
 	// The magic number is usually 0 in the game's code so I recommend passing that in, anything else is untested.
+	// UNABLE TO BE BOUND IN LUA
 	EXUAPI void DLLAPI VarSys_RegisterHandler(ConstName name, VarSysHandler handler, unsigned long magic);
 
 	// Same as the lua function

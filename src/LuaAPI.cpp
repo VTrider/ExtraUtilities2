@@ -4,6 +4,7 @@
 #include <lua.hpp>
 
 #include <string>
+#include <unordered_map>
 
 #define EXPORT(symbol) { #symbol, symbol },
 
@@ -12,6 +13,12 @@ namespace exu2
 	static int GetPerspectiveMatrix(lua_State* L)
 	{
 		PushMatrix(L, GetPerspectiveMatrix());
+		return 1;
+	}
+
+	static int GetViewMatrix(lua_State* L)
+	{
+		PushMatrix(L, GetViewMatrix());
 		return 1;
 	}
 
@@ -28,12 +35,6 @@ namespace exu2
 			lua_pushnil(L);
 		}
 
-		return 1;
-	}
-
-	static int GetViewMatrix(lua_State* L)
-	{
-		PushMatrix(L, GetViewMatrix());
 		return 1;
 	}
 
@@ -104,35 +105,12 @@ namespace exu2
 		return 2;
 	}
 
-	static int IFace_DeleteItem(lua_State* L)
-	{
-		ConstName name = luaL_checkstring(L, 1);
-		bool result = IFace_DeleteItem(name);
-		lua_pushboolean(L, result);
-		return 1;
-	}
-/*
-	static int VarSys_RegisterHandler(lua_State* L)
-	{
-		// Probably not able to be bound in lua due to function differences
-		ConstName name = luaL_checkstring(L, 1);
-		unsigned long magic = luaL_checklong(L, 3);
-		VarSys_RegisterHandler(name, nullptr, magic);
-		return 0;
-	}
-
-	static int VarSys_CreateCmd([[maybe_unused]] lua_State* L)
-	{
-
-	}
-*/
-
 	static int GetViewportSize(lua_State* L)
 	{
-		auto viewport = GetViewportSize();
+		iVector2 viewport = GetViewportSize();
 
-		lua_pushinteger(L, viewport.first);
-		lua_pushinteger(L, viewport.second);
+		lua_pushinteger(L, viewport.x);
+		lua_pushinteger(L, viewport.y);
 
 		return 2;
 	}
@@ -142,6 +120,15 @@ namespace exu2
 		lua_pushstring(L, std::to_string(GetSteam64()).c_str());
 		return 1;
 	}
+
+	static int IFace_DeleteItem(lua_State* L)
+	{
+		ConstName name = luaL_checkstring(L, 1);
+		bool result = IFace_DeleteItem(name);
+		lua_pushboolean(L, result);
+		return 1;
+	}
+
 
 	static void RegisterConstants(lua_State* L)
 	{
@@ -159,9 +146,9 @@ namespace exu2
 			EXPORT(IFace_GetArgFloat)
 			EXPORT(IFace_GetArgInteger)
 			EXPORT(IFace_GetArgString)
-			EXPORT(IFace_DeleteItem)
 			EXPORT(GetViewportSize)
 			EXPORT(GetSteam64)
+			EXPORT(IFace_DeleteItem)
 			{ 0, 0 }
 		};
 		luaL_newlib(L, EXPORT_TABLE);

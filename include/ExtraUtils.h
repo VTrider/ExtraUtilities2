@@ -16,7 +16,7 @@
 namespace exu2
 {
 	constexpr const char* versionString = "1.0.0";
-	constexpr const char* gameVersion = "2.0.204";
+	constexpr const char* gameVersion = "2.0.204.1";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
 

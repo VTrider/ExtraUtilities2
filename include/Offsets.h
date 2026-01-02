@@ -4,11 +4,11 @@
 
 namespace Offsets
 {
-    constexpr uintptr_t ArgCount = 0x3505F0;
-    constexpr uintptr_t GetArgFloat = 0x350648;
-    constexpr uintptr_t GetArgInteger = 0x3508B9;
-    constexpr uintptr_t GetArgString = 0x350888;
-    constexpr uintptr_t DeleteItem = 0x34BC44;
-    constexpr uintptr_t CreateCmd = 0x34BC64;
-    constexpr uintptr_t RegisterHandler = 0x34BBA4;
+    constexpr uintptr_t ArgCount = 0x350D80;
+    constexpr uintptr_t GetArgFloat = 0x350DD8;
+    constexpr uintptr_t GetArgInteger = 0x351049;
+    constexpr uintptr_t GetArgString = 0x351018;
+    constexpr uintptr_t DeleteItem = 0x34C3D7;
+    constexpr uintptr_t CreateCmd = 0x34C3F7;
+    constexpr uintptr_t RegisterHandler = 0x34C337;
 } // namespace Offsets

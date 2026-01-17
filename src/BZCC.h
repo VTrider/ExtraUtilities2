@@ -19,6 +19,20 @@ namespace BZCC
 		uint8_t pad1[0x160];
 		Matrix perspective;
 		Matrix view;
+		uint8_t pad2[0x114];
+
+		// IMPORTANT: this is not actually specifically satellite mode,
+		// it's a flag that disables all fog if set to 1, which happens to
+		// coincide with satellite mode. There is a related value that unlocks the
+		// cursor from the center of the screen you can find easily with memory scanning
+		// which also follows the satellite state, but it may have other uses for war thunder
+		// style aiming or something? The value is currently set to const since changing it
+		// will affect the fog and not the satellite state, this api will change if 
+		// the actual satellite state flag/function is found.
+		static inline const volatile bool* const inSatellite = []()
+		{
+			return *reinterpret_cast<bool**>(moduleBase + Offsets::inSatellite);
+		}();
 
 		static inline const Camera* const mainCamera = []()
 		{

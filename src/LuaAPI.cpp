@@ -4,52 +4,96 @@
 #include <lua.hpp>
 
 #include <string>
-#include <unordered_map>
 
 #define EXPORT(symbol) { #symbol, symbol },
 
-namespace exu2
+namespace exu2::lua
 {
-	static int GetPerspectiveMatrix(lua_State* L)
+	int GetPerspectiveMatrix(lua_State* L)
 	{
-		PushMatrix(L, GetPerspectiveMatrix());
+		PushMatrix(L, exu2::GetPerspectiveMatrix());
 		return 1;
 	}
 
-	static int GetViewMatrix(lua_State* L)
+	int GetViewMatrix(lua_State* L)
 	{
-		PushMatrix(L, GetViewMatrix());
+		PushMatrix(L, exu2::GetViewMatrix());
 		return 1;
 	}
 
-	static int WorldToScreen(lua_State* L)
+	int InSatellite(lua_State* L)
 	{
-		Vector worldPos = CheckVectorOrSingles(L, 1);
-		Vector screenPos;
-		if (WorldToScreen(worldPos, &screenPos))
+		lua_pushboolean(L, exu2::InSatellite());
+		return 1;
+	}
+
+	int IsVisible(lua_State* L)
+	{
+		if (auto h = CheckHandle(L, 1))
 		{
-			PushVector(L, screenPos);
+			lua_pushboolean(L, exu2::IsVisible(*h));
+		}
+		else if (auto m = CheckMatrix(L, 1))
+		{
+			lua_pushboolean(L, exu2::IsVisible(**m));
+		}
+		else if (auto v = CheckVector(L, 1))
+		{
+			lua_pushboolean(L, exu2::IsVisible(**v));
 		}
 		else
 		{
-			lua_pushnil(L);
+			return luaL_argerror(L, 1, "Extra Utilities 2 Error: Invalid argument to IsVisible");
 		}
-
 		return 1;
 	}
 
-	static int IFace_GetArgCount(lua_State* L)
+	int WorldToScreen(lua_State* L)
 	{
-		int count = IFace_GetArgCount();
+		auto Overload = [L](auto&& pos)
+		{
+			Vector outScreen{};
+			if (exu2::WorldToScreen(pos, &outScreen))
+			{
+				PushVector(L, outScreen);
+			}
+			else
+			{
+				lua_pushnil(L);
+			}
+		};
+
+		if (auto h = CheckHandle(L, 1))
+		{
+			Overload(*h);
+		}
+		else if (auto m = CheckMatrix(L, 1))
+		{
+			Overload(**m);
+		}
+		else if (auto v = CheckVectorOrSingles(L, 1))
+		{
+			Overload(*v);
+		}
+		else
+		{
+			return luaL_argerror(L, 1, "Extra Utilities 2 Error: Invalid argument to WorldToScreen");
+		}
+		return 1;
+	}
+
+	int IFace_GetArgCount(lua_State* L)
+	{
+		int count = exu2::IFace_GetArgCount();
 		lua_pushinteger(L, count);
 		return 1;
 	}
 
-	static int IFace_GetArgFloat(lua_State* L)
+	int IFace_GetArgFloat(lua_State* L)
 	{
 		int arg = luaL_checkinteger(L, 1);
 		float value{};
-		bool success = IFace_GetArgFloat(arg, &value);
+		bool success = exu2::IFace_GetArgFloat(arg, &value);
 
 		if (success)
 		{
@@ -65,11 +109,11 @@ namespace exu2
 		return 2;
 	}
 
-	static int IFace_GetArgInteger(lua_State* L)
+	int IFace_GetArgInteger(lua_State* L)
 	{
 		int arg = luaL_checkinteger(L, 1);
 		int value{};
-		bool success = IFace_GetArgInteger(arg, &value);
+		bool success = exu2::IFace_GetArgInteger(arg, &value);
 
 		if (success)
 		{
@@ -85,11 +129,11 @@ namespace exu2
 		return 2;
 	}
 
-	static int IFace_GetArgString(lua_State* L)
+	int IFace_GetArgString(lua_State* L)
 	{
 		int arg = luaL_checkinteger(L, 1);
 		char* value = nullptr;
-		bool success = IFace_GetArgString(arg, &value);
+		bool success = exu2::IFace_GetArgString(arg, &value);
 
 		if (success && value != nullptr)
 		{
@@ -105,9 +149,9 @@ namespace exu2
 		return 2;
 	}
 
-	static int GetViewportSize(lua_State* L)
+	int GetViewportSize(lua_State* L)
 	{
-		iVector2 viewport = GetViewportSize();
+		iVector2 viewport = exu2::GetViewportSize();
 
 		lua_pushinteger(L, viewport.x);
 		lua_pushinteger(L, viewport.y);
@@ -115,22 +159,22 @@ namespace exu2
 		return 2;
 	}
 
-	static int GetSteam64(lua_State* L)
+	int GetSteam64(lua_State* L)
 	{
-		lua_pushstring(L, std::to_string(GetSteam64()).c_str());
+		lua_pushstring(L, std::to_string(exu2::GetSteam64()).c_str());
 		return 1;
 	}
 
-	static int IFace_DeleteItem(lua_State* L)
+	int IFace_DeleteItem(lua_State* L)
 	{
 		ConstName name = luaL_checkstring(L, 1);
-		bool result = IFace_DeleteItem(name);
+		bool result = exu2::IFace_DeleteItem(name);
 		lua_pushboolean(L, result);
 		return 1;
 	}
 
 
-	static void RegisterConstants(lua_State* L)
+	void RegisterConstants(lua_State* L)
 	{
 		lua_pushstring(L, versionString);
 		lua_setfield(L, -2, "VERSION");
@@ -140,8 +184,10 @@ namespace exu2
 	{
 		constexpr luaL_Reg EXPORT_TABLE[] = {
 			EXPORT(GetPerspectiveMatrix)
-			EXPORT(WorldToScreen)
 			EXPORT(GetViewMatrix)
+			EXPORT(InSatellite)
+			EXPORT(IsVisible)
+			EXPORT(WorldToScreen)
 			EXPORT(IFace_GetArgCount)
 			EXPORT(IFace_GetArgFloat)
 			EXPORT(IFace_GetArgInteger)

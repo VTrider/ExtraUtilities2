@@ -3,6 +3,8 @@
 #include <lua.hpp>
 #include <ScriptUtils.h>
 
+#include <optional>
+
 namespace exu2
 {
 	inline void PushMatrix(lua_State* L, const Matrix& m)
@@ -38,30 +40,6 @@ namespace exu2
 		lua_setfield(L, -2, "posit_w");
 	}
 
-	// Get either a vector or three numbers from lua
-	inline Vector CheckVectorOrSingles(lua_State* L, int idx)
-	{
-		Vector v;
-		if (lua_isuserdata(L, idx))
-		{
-			lua_getfield(L, idx, "x");
-			v.x = static_cast<float>(luaL_checknumber(L, -1));
-
-			lua_getfield(L, idx, "y");
-			v.y = static_cast<float>(luaL_checknumber(L, -1));
-
-			lua_getfield(L, idx, "z");
-			v.z = static_cast<float>(luaL_checknumber(L, -1));
-		}
-		else
-		{
-			v.x = static_cast<float>(luaL_checknumber(L, idx));
-			v.y = static_cast<float>(luaL_checknumber(L, idx + 1));
-			v.z = static_cast<float>(luaL_checknumber(L, idx + 2));
-		}
-
-		return v;
-	}
 
 	inline void PushVector(lua_State* L, const Vector& v)
 	{
@@ -73,4 +51,82 @@ namespace exu2
 
 		lua_call(L, 3, 1);
 	}
+
+	// Notes on "require" and "check" functions, string for
+	// all userdata types is identical to their C type ie
+	// Handle -> "Handle", Quaternion -> "Quaternion"
+
+	inline Handle RequireHandle(lua_State* L, int idx)
+	{
+		return reinterpret_cast<Handle>(luaL_checkudata(L, idx, "Handle"));
+	}
+
+	inline std::optional<Handle> CheckHandle(lua_State* L, int idx)
+	{
+		if (Handle h = reinterpret_cast<Handle>(luaL_testudata(L, idx, "Handle")))
+		{
+			return h;
+		}
+		else
+		{
+			return std::nullopt;
+		}
+	}
+
+	inline Vector* RequireVector(lua_State* L, int idx)
+	{
+		return reinterpret_cast<Vector*>(luaL_checkudata(L, idx, "Vector"));
+	}
+
+	inline std::optional<Vector*> CheckVector(lua_State* L, int idx)
+	{
+		if (Vector* h = reinterpret_cast<Vector*>(luaL_testudata(L, idx, "Vector")))
+		{
+			return h;
+		}
+		else
+		{
+			return std::nullopt;
+		}
+	}
+
+	// Get either a vector or three numbers from lua
+	inline std::optional<Vector> CheckVectorOrSingles(lua_State* L, int idx)
+	{
+		Vector v{};
+		if (auto optv = CheckVector(L, idx))
+		{
+			v = **optv;
+		}
+		else if (lua_gettop(L) == 3)
+		{
+			v.x = static_cast<float>(luaL_checknumber(L, idx));
+			v.y = static_cast<float>(luaL_checknumber(L, idx + 1));
+			v.z = static_cast<float>(luaL_checknumber(L, idx + 2));
+		}
+		else
+		{
+			return std::nullopt;
+		}
+
+		return v;
+	}
+
+	inline Matrix* RequireMatrix(lua_State* L, int idx)
+	{
+		return reinterpret_cast<Matrix*>(luaL_checkudata(L, idx, "Matrix"));
+	}
+
+	inline std::optional<Matrix*> CheckMatrix(lua_State* L, int idx)
+	{
+		if (Matrix* h = reinterpret_cast<Matrix*>(luaL_testudata(L, idx, "Matrix")))
+		{
+			return h;
+		}
+		else
+		{
+			return std::nullopt;
+		}
+	}
+
 }

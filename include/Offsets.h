@@ -11,4 +11,5 @@ namespace Offsets
     constexpr uintptr_t DeleteItem = 0x34C3D7;
     constexpr uintptr_t CreateCmd = 0x34C3F7;
     constexpr uintptr_t RegisterHandler = 0x34C337;
+    constexpr uintptr_t inSatellite = 0x277848;
 } // namespace Offsets

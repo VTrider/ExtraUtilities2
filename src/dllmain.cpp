@@ -5,7 +5,7 @@
 
 #include <cstring>
 #include <exception>
-
+ 
 FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayLoadInfo pdli)
 {
 	if (_stricmp(pdli->szDll, "LuaMission.dll") == 0)

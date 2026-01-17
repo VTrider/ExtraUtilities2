@@ -18,7 +18,6 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -139,7 +138,7 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.iobj
-*.pdb
+# *.pdb
 *.ipdb
 *.pgc
 *.pgd

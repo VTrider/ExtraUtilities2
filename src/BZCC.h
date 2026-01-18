@@ -9,7 +9,7 @@
 
 namespace BZCC
 {
-	inline const HMODULE moduleHandle = GetModuleHandle("battlezone2.exe");
+	inline const HMODULE moduleHandle = GetModuleHandleW(L"battlezone2.exe");
 	inline const uintptr_t moduleBase = reinterpret_cast<uintptr_t>(moduleHandle);
 
 	class Camera

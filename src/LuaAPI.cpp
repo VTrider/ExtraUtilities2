@@ -149,6 +149,18 @@ namespace exu2::lua
 		return 2;
 	}
 
+	int GetBZCCPath(lua_State* L)
+	{
+		lua_pushstring(L, exu2::GetBZCCPath().string().c_str());
+		return 1;
+	}
+
+	int GetWorkshopPath(lua_State* L)
+	{
+		lua_pushstring(L, exu2::GetWorkshopPath().string().c_str());
+		return 1;
+	}
+
 	int GetViewportSize(lua_State* L)
 	{
 		iVector2 viewport = exu2::GetViewportSize();
@@ -192,6 +204,8 @@ namespace exu2::lua
 			EXPORT(IFace_GetArgFloat)
 			EXPORT(IFace_GetArgInteger)
 			EXPORT(IFace_GetArgString)
+			EXPORT(GetBZCCPath)
+			EXPORT(GetWorkshopPath)
 			EXPORT(GetViewportSize)
 			EXPORT(GetSteam64)
 			EXPORT(IFace_DeleteItem)

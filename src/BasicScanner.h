@@ -13,8 +13,8 @@ namespace exu2
 	class BasicScanner
 	{
 	protected:
-		static inline uintptr_t m_bzccModuleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("battlezone2.exe"));
-		static inline uintptr_t m_steamApiModuleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("steam_api.dll"));
+		static inline uintptr_t m_bzccModuleBase = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"battlezone2.exe"));
+		static inline uintptr_t m_steamApiModuleBase = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"steam_api.dll"));
 
 		BasicScanner() = default;
 		virtual ~BasicScanner() = default;

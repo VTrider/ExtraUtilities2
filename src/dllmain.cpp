@@ -12,10 +12,10 @@ FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayL
 	{
 		if (dliNotify == dliFailGetProc)
 		{
-			const char* msg = "This mod is using a custom LuaMission.dll that does not provide "
-							  "exports for the Lua C API. This is highly discouraged. Please contact "
-							  "the mod author to update it to conform to stock standards.";
-			MessageBox(NULL, msg, "Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
+			const wchar_t* msg = L"This mod is using a custom LuaMission.dll that does not provide "
+								  "exports for the Lua C API. This is highly discouraged. Please contact "
+								  "the mod author to update it to conform to stock standards.";
+			MessageBoxW(NULL, msg, L"Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
 			std::terminate();
 		}
 	}
@@ -37,7 +37,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 		DisableThreadLibraryCalls(hModule);
 		break;
 	case DLL_PROCESS_DETACH:
-		if (GetModuleHandle("LuaMission.dll"))
+		if (GetModuleHandleW(L"LuaMission.dll"))
 		{
 			__FUnloadDelayLoadedDLL2("LuaMission.dll");
 		}

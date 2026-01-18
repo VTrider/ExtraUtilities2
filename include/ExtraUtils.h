@@ -31,8 +31,6 @@ namespace exu2
 								 LOAD_LIBRARY_SEARCH_SYSTEM32 |
 								 LOAD_LIBRARY_SEARCH_USER_DIRS
         );
-		auto t = GetWorkshopPath().append("3515140097").append("Bin").c_str();
-		MessageBoxW(NULL, t, L"test", MB_SYSTEMMODAL);
         AddDllDirectory(GetWorkshopPath().append("3515140097").append("Bin").c_str());
 	}
 

@@ -90,6 +90,16 @@ function exu2.IFace_GetArgInteger(arg) end
 --- @return string | nil
 function exu2.IFace_GetArgString(arg) end
 
+--- Filesystem
+
+--- Returns the root BZCC directory where the executable is.
+--- @return string
+function exu2.GetBZCCPath() end
+
+--- Returns the BZCC steam workshop directory.
+--- @return string
+function exu2.GetWorkshopPath() end
+
 --- Graphics
 
 --- Gets the current viewport size in pixels (X, Y).

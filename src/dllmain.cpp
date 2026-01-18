@@ -1,11 +1,49 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
+#include "ExtraUtils.h"
+#include <ScriptUtils.h>
+
 #include <Windows.h>
 #include <delayimp.h>
 
 #include <cstring>
 #include <exception>
- 
+#include <format>
+
+namespace exu2
+{
+	void Startup()
+	{
+		PrintConsoleMessage(std::format("Running Extra Utilities 2 v{} by VTrider", versionString).c_str());
+	}
+
+	void Shutdown()
+	{
+		if (GetModuleHandleW(L"LuaMission.dll"))
+		{
+			__FUnloadDelayLoadedDLL2("LuaMission.dll");
+		}
+	}
+}
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       [[maybe_unused]] LPVOID opReserved
+                     )
+{
+    switch (ul_reason_for_call)
+    {
+	case DLL_PROCESS_ATTACH:
+		DisableThreadLibraryCalls(hModule);
+		exu2::Startup();
+		break;
+	case DLL_PROCESS_DETACH:
+		exu2::Shutdown();
+		break;
+	}
+    return TRUE;
+}
+
 FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayLoadInfo pdli)
 {
 	if (_stricmp(pdli->szDll, "LuaMission.dll") == 0)
@@ -25,23 +63,3 @@ FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayL
 
 extern "C" const PfnDliHook  __pfnDliNotifyHook2 = DelayLoadHandler;
 extern "C" const PfnDliHook  __pfnDliFailureHook2 = DelayLoadHandler;
-
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       [[maybe_unused]] LPVOID opReserved
-                     )
-{
-    switch (ul_reason_for_call)
-    {
-	case DLL_PROCESS_ATTACH:
-		DisableThreadLibraryCalls(hModule);
-		break;
-	case DLL_PROCESS_DETACH:
-		if (GetModuleHandleW(L"LuaMission.dll"))
-		{
-			__FUnloadDelayLoadedDLL2("LuaMission.dll");
-		}
-		break;
-	}
-    return TRUE;
-}

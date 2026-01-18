@@ -1,11 +1,4 @@
---[[
-Example DLL Loader by VTrider
-
-There's probably a better way to do it that I
-Don't know about
---]]
-
-local dll_loader = {}
+local libloader = {}
 do
     -- The following two functions are by DivisionByZero -VT
     local function splitAtSemicolon(str)
@@ -35,7 +28,7 @@ do
         return gameDirectory .. "\\" .. workshopRelativePath
     end
 
-    function dll_loader.require(workshop_id, ...)
+    function libloader.require(workshop_id, ...)
         local path = getSteamWorkshopDirectory()
         path = path .. "\\" .. workshop_id
         for _, folder in ipairs({...}) do
@@ -44,5 +37,5 @@ do
         package.cpath = package.cpath .. ";" .. path .. "\\" .. "?.dll"
     end
 end
-return dll_loader
+return libloader
 

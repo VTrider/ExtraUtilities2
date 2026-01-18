@@ -6,8 +6,8 @@ and returns the dll module
 
 local exu2
 do
-    local dll_loader = require("dll_loader")
-    dll_loader.require("3515140097", "Bin")
+    local libloader = require("libloader")
+    libloader.require("3515140097", "Bin")
     local old_path = package.path
     package.path = ""
     exu2 = require("ExtraUtilities2")

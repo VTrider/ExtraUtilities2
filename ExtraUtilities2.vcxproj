@@ -22,6 +22,7 @@
   <ItemGroup>
     <ClInclude Include="include\ExtraUtils.h" />
     <ClInclude Include="include\Offsets.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\BasicScanner.h" />
     <ClInclude Include="src\BZCC.h" />
@@ -30,6 +31,9 @@
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\MathUtils.h" />
     <ClInclude Include="src\Scanner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ExtraUtilities2.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

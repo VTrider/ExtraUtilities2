@@ -51,7 +51,7 @@ In Visual Studio:
 
 - Copy `ExtraUtils.h` into your include directory
 - Copy `ExtraUtilities2.lib` into your lib directory
-- In your project settings go to `Linker -> input` and under `Delay Loaded Dlls` add `ExtraUtilities2.dll`
+- In your project settings go to `Linker -> input` and under `Additional Dependencies` add `ExtraUtilities2.lib`, then under `Delay Loaded Dlls` add `ExtraUtilities2.dll`
 - Then go to `Linker -> Advanced` and under `Unload delay loaded DLL` select `Yes (/DELAY:UNLOAD)`
 
 Once the project is configured, go to `dllmain.cpp` and make sure the following code is in place:

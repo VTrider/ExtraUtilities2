@@ -9,11 +9,40 @@
 #include <ScriptUtils.h>
 
 #include <Windows.h>
+#include <delayimp.h>
 
 #include <cstdint>
+#include <filesystem>
 
 namespace exu2
 {
+#ifndef EXU_EXPORTS
+	std::filesystem::path GetWorkshopPath();
+
+	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
+	// respectively if you are using this library in a dll mission. By default this uses the 
+	// version of the library currently on the steam workshop. If you are using a custom or
+	// development build, you must set the dll directory accordingly. See the README on
+	// GitHub for more info.
+	inline void ProcessAttach()
+	{
+		SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
+								 LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 
+								 LOAD_LIBRARY_SEARCH_SYSTEM32 |
+								 LOAD_LIBRARY_SEARCH_USER_DIRS
+        );
+        AddDllDirectory(GetWorkshopPath().append("3515140097").append("Bin").c_str());
+	}
+
+	inline void ProcessDetach()
+	{
+		if (GetModuleHandleW(L"ExtraUtilities2.dll"))
+		{
+			__FUnloadDelayLoadedDLL2("ExtraUtilities2.dll");
+		}
+	}
+#endif
+
 	constexpr const char* versionString = "1.0.0";
 	constexpr const char* gameVersion = "2.0.204.1";
 
@@ -76,6 +105,28 @@ namespace exu2
 	// Gets a string value at the given position if it exists
 	EXUAPI bool DLLAPI IFace_GetArgString(int arg, char** value);
 
+	// Filesystem
+
+	inline std::filesystem::path GetBZCCPath()
+	{
+		wchar_t bzccPath[MAX_PATH];
+		GetModuleFileNameW(NULL, bzccPath, MAX_PATH);
+		return std::filesystem::path(bzccPath).parent_path();
+	}
+
+	inline std::filesystem::path GetWorkshopPath()
+	{
+		DWORD size = MAX_PATH;
+		std::wstring steamPath(MAX_PATH, L'\0');
+		RegGetValueW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\WOW6432Node\\Valve\\Steam", L"InstallPath", RRF_RT_REG_SZ, NULL, steamPath.data(), &size);
+
+		steamPath.resize(size / sizeof(wchar_t) - 1);
+		std::filesystem::path workshopPath(steamPath);
+		workshopPath.append("steamapps").append("workshop").append("content").append("624970");
+
+		return workshopPath;
+	}
+
 	// Graphics
 
 	// Gets the current viewport size in pixels (X, Y)
@@ -109,4 +160,28 @@ namespace exu2
 	{
 		return SecondsToTurns(1.0f);
 	}
+
+	// Do not modify
+
+#ifndef EXU_EXPORTS
+	inline FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayLoadInfo pdli)
+	{
+		if (_stricmp(pdli->szDll, "ExtraUtilities2.dll") == 0)
+		{
+			if (dliNotify == dliFailLoadLib)
+			{
+				const wchar_t* msg = L"Failed to find ExtraUtilities2.dll. This can happen if the workshop item "
+									  "is not installed, or if you are running a custom build and failed to set "
+									  "the dll search path. See the README on GitHub for more info.";
+				MessageBoxW(NULL, msg, L"Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
+				std::terminate();
+			}
+		}
+
+		return NULL;
+	}
+
+	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliNotifyHook2 = DelayLoadHandler;
+	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliFailureHook2 = DelayLoadHandler;
+#endif
 }

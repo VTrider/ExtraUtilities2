@@ -182,7 +182,14 @@ namespace exu2::lua
 		if (lua_gettop(L))
 		{
 			int team = luaL_checkinteger(L, 1);
-			lua_pushstring(L, std::to_string(exu2::GetSteam64(team)).c_str());
+			if (uint64_t s64 = exu2::GetSteam64(team))
+			{
+				lua_pushstring(L, std::to_string(s64).c_str());
+			}
+			else
+			{
+				lua_pushnil(L);
+			}
 		}
 		else
 		{

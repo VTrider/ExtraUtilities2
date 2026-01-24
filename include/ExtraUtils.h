@@ -189,6 +189,8 @@ namespace exu2
 		return NULL;
 	}
 
+	// The selectany attribute is like inline but it makes it into a "strong" symbol
+	// which keeps it compatible with what the Windows API is expecting, inline won't work.
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliNotifyHook2 = DelayLoadHandler;
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliFailureHook2 = DelayLoadHandler;
 #endif

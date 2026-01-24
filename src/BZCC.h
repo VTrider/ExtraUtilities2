@@ -74,6 +74,7 @@ namespace BZCC
 
 	namespace Steam
 	{
+		inline const char* const activeConfigMod = *reinterpret_cast<char**>(moduleBase + Offsets::activeConfigMod);
 		inline const uint64_t* const steam64 = reinterpret_cast<uint64_t*>(steamAPIBase + 0x34690);
 	}
 

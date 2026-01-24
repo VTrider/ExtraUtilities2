@@ -171,9 +171,23 @@ namespace exu2::lua
 		return 2;
 	}
 
+	int GetActiveConfigMod(lua_State* L)
+	{
+		lua_pushstring(L, exu2::GetActiveConfigMod());
+		return 1;
+	}
+
 	int GetSteam64(lua_State* L)
 	{
-		lua_pushstring(L, std::to_string(exu2::GetSteam64()).c_str());
+		if (lua_gettop(L))
+		{
+			int team = luaL_checkinteger(L, 1);
+			lua_pushstring(L, std::to_string(exu2::GetSteam64(team)).c_str());
+		}
+		else
+		{
+			lua_pushstring(L, std::to_string(exu2::GetSteam64()).c_str());
+		}
 		return 1;
 	}
 
@@ -207,6 +221,7 @@ namespace exu2::lua
 			EXPORT(GetBZCCPath)
 			EXPORT(GetWorkshopPath)
 			EXPORT(GetViewportSize)
+			EXPORT(GetActiveConfigMod)
 			EXPORT(GetSteam64)
 			EXPORT(IFace_DeleteItem)
 			{ 0, 0 }

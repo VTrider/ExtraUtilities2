@@ -134,9 +134,15 @@ namespace exu2
 
 	// Steam
 
+	// Gets the name of the active config mod ie. "1325933293.cfg". This will be the
+	// Steam Workshop ID for Steam mods, or the name of the .cfg file of a local mod.
+	EXUAPI const char* const DLLAPI GetActiveConfigMod();
+
 	// Gets the Steam 64 ID of the local user
 	EXUAPI uint64_t DLLAPI GetSteam64();
 
+	// Gets the Steam64 ID of the user at the given team if it exists.
+	// Returns 0 if there is no player associated with the team.
 	EXUAPI uint64_t DLLAPI GetSteam64(int team);
 
 	// VarSys

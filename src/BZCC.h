@@ -10,6 +10,7 @@
 namespace BZCC
 {
 	inline const HMODULE moduleHandle = GetModuleHandleW(L"battlezone2.exe");
+	inline const uintptr_t steamAPIBase = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"steam_api.dll"));
 	inline const uintptr_t moduleBase = reinterpret_cast<uintptr_t>(moduleHandle);
 
 	class Camera
@@ -29,10 +30,7 @@ namespace BZCC
 		// style aiming or something? The value is currently set to const since changing it
 		// will affect the fog and not the satellite state, this api will change if 
 		// the actual satellite state flag/function is found.
-		static inline const volatile bool* const inSatellite = []()
-		{
-			return *reinterpret_cast<bool**>(moduleBase + Offsets::inSatellite);
-		}();
+		static inline const volatile bool* const inSatellite = *reinterpret_cast<bool**>(moduleBase + Offsets::inSatellite);
 
 		static inline const Camera* const mainCamera = []()
 		{
@@ -58,9 +56,25 @@ namespace BZCC
 		inline const GetArgString_t GetArgString = (GetArgString_t)(moduleBase + Offsets::GetArgString);
 	}
 
+#pragma pack(push, 1)
+	class NetPlayerInfo
+	{
+	public:
+		char nickname[32]; // includes null terminator
+		uint8_t pad_1[92];
+		uint64_t steam64;
+
+		// TODO: this is actually something different not the g_pNetPlayerInfo see 1.3 pdb
+		// Array of 16 values one per team slot presumably, can be filled with garbage or ai players,
+		// so validate there's actually a player there before using the value.
+		// ONLY ACTIVE IN MP
+		static inline NetPlayerInfo** netPlayerInfoArray = *reinterpret_cast<NetPlayerInfo***>(moduleBase + Offsets::netPlayerInfoArray);
+	};
+#pragma pack(pop)
+
 	namespace Steam
 	{
-		inline auto* steam64 = (uint64_t*)0x34690; // offset from steam_api.dll
+		inline const uint64_t* const steam64 = reinterpret_cast<uint64_t*>(steamAPIBase + 0x34690);
 	}
 
 	namespace VarSys

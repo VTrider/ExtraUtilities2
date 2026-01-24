@@ -43,7 +43,7 @@ namespace exu2
 	}
 #endif
 
-	constexpr const char* versionString = "1.0.0";
+	constexpr const char* versionString = "1.1.0";
 	constexpr const char* gameVersion = "2.0.204.1";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
@@ -136,6 +136,8 @@ namespace exu2
 
 	// Gets the Steam 64 ID of the local user
 	EXUAPI uint64_t DLLAPI GetSteam64();
+
+	EXUAPI uint64_t DLLAPI GetSteam64(int team);
 
 	// VarSys
 

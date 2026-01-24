@@ -12,4 +12,5 @@ namespace Offsets
     constexpr uintptr_t CreateCmd = 0x34C3F7;
     constexpr uintptr_t RegisterHandler = 0x34C337;
     constexpr uintptr_t inSatellite = 0x277848;
+    constexpr uintptr_t netPlayerInfoArray = 0x1C705C;
 } // namespace Offsets

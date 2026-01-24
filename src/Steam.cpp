@@ -2,12 +2,26 @@
 #include "ExtraUtils.h"
 #include "Scanner.h"
 
+#include <ScriptUtils.h>
+
 namespace exu2
 {
-	const Scanner<uint64_t> s64(BZCC::Steam::steam64, BasicScanner::Restore::DISABLED, BasicScanner::BaseAddress::STEAMAPI);
-
 	uint64_t DLLAPI GetSteam64()
 	{
-		return s64.Read();
+		if (IsNetworkOn())
+		{
+			int myTeam = GetLocalPlayerTeamNumber();
+			return GetSteam64(myTeam);
+		}
+		else
+		{
+			return *BZCC::Steam::steam64;
+		}
+	}
+
+	EXUAPI uint64_t DLLAPI GetSteam64(int team)
+	{
+		BZCC::NetPlayerInfo* info = BZCC::NetPlayerInfo::netPlayerInfoArray[team];
+		return (info) ? info->steam64 : 0LL;
 	}
 }

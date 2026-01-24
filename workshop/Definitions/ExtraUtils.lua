@@ -1,6 +1,6 @@
 --- @meta exu2
 --- This file provides the lua definitions for Extra Utilities 2
---- This depends on AI Unit's BZCC Lua Function Sigs. 
+--- This depends on AI Unit's BZCC Lua Function Sigs.
 --- If you are missing definitions for stock symbols, make sure it is
 --- added to your lua language server workspace. You can find this on
 --- the Battlezone Scrap Field GitHub organization.
@@ -109,11 +109,24 @@ function exu2.GetViewportSize() end
 
 --- Steam
 
+--- Gets the name of the active config mod ie. "1325933293.cfg". This will be the
+--- Steam Workshop ID for Steam mods, or the name of the .cfg file of a local mod.
+--- @return string
+function exu2.GetActiveConfigMod() end
+
 --- Gets the Steam 64 ID of the local user.
 --- Note that it's a string because lua 5.2 doesn't support
---- 64 bit integers
+--- 64 bit integers.
 --- @return string
 function exu2.GetSteam64() end
+
+--- Gets the Steam64 ID of the user at the given team if it exists.
+--- Returns nil if there is no player associated with the team.
+--- Note that it's a string because lua 5.2 doesn't support
+--- 64 bit integers.
+--- @param team integer
+--- @return string | nil
+function exu2.GetSteam64(team) end
 
 --- VarSys
 

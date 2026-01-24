@@ -43,7 +43,7 @@ namespace exu2
 	}
 #endif
 
-	constexpr const char* versionString = "1.0.0";
+	constexpr const char* versionString = "1.1.0";
 	constexpr const char* gameVersion = "2.0.204.1";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
@@ -134,8 +134,16 @@ namespace exu2
 
 	// Steam
 
+	// Gets the name of the active config mod ie. "1325933293.cfg". This will be the
+	// Steam Workshop ID for Steam mods, or the name of the .cfg file of a local mod.
+	EXUAPI const char* const DLLAPI GetActiveConfigMod();
+
 	// Gets the Steam 64 ID of the local user
 	EXUAPI uint64_t DLLAPI GetSteam64();
+
+	// Gets the Steam64 ID of the user at the given team if it exists.
+	// Returns 0 if there is no player associated with the team.
+	EXUAPI uint64_t DLLAPI GetSteam64(int team);
 
 	// VarSys
 
@@ -181,6 +189,8 @@ namespace exu2
 		return NULL;
 	}
 
+	// The selectany attribute is like inline but it makes it into a "strong" symbol
+	// which keeps it compatible with what the Windows API is expecting, inline won't work.
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliNotifyHook2 = DelayLoadHandler;
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliFailureHook2 = DelayLoadHandler;
 #endif

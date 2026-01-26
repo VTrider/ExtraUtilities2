@@ -41,10 +41,16 @@ namespace exu2
 			__FUnloadDelayLoadedDLL2("ExtraUtilities2.dll");
 		}
 	}
+
+	// Use this to compare against the DLL version. You should make sure that
+	// your header is up to date with the latest DLL.
+	constexpr const char* headerVersion = "1.2.0";
 #endif
 
-	constexpr const char* versionString = "1.1.0";
-	constexpr const char* gameVersion = "2.0.204.1";
+	// Returns the current dll version Major.Minor.Patch
+	EXUAPI const char* DLLAPI GetDLLVersion();
+
+	[[deprecated]] constexpr const char* gameVersion = "2.0.204.1";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
 

@@ -14,7 +14,7 @@ namespace exu2
 {
 	void Startup()
 	{
-		PrintConsoleMessage(std::format("Running Extra Utilities 2 v{} by VTrider", versionString).c_str());
+		PrintConsoleMessage(std::format("Running Extra Utilities 2 v{} by VTrider", GetDLLVersion()).c_str());
 	}
 
 	void Shutdown()

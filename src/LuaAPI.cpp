@@ -206,10 +206,9 @@ namespace exu2::lua
 		return 1;
 	}
 
-
 	void RegisterConstants(lua_State* L)
 	{
-		lua_pushstring(L, versionString);
+		lua_pushstring(L, exu2::GetDLLVersion());
 		lua_setfield(L, -2, "VERSION");
 	}
 

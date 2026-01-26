@@ -49,6 +49,7 @@ debugging symbols.
 
 In Visual Studio:
 
+- Make sure your C++ version is at least C++17
 - Copy `ExtraUtils.h` into your include directory
 - Copy `ExtraUtilities2.lib` into your lib directory
 - In your project settings go to `Linker -> input` and under `Additional Dependencies` add `ExtraUtilities2.lib`, then under `Delay Loaded Dlls` add `ExtraUtilities2.dll`

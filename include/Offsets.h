@@ -1,17 +1,42 @@
 #pragma once
 
-#include <cstdint>
+#include "Offsets185.h"
+#include "Offsets200.h"
+#include "Offsets204.h"
+
+#include "ExtraUtils.h"
+
+#define RESOLVE_VERSIONED_OFFSET(name) \
+	[]() -> uintptr_t \
+	{ \
+		int minorVersion = exu2::GetGameMinorVersion(); \
+		if (minorVersion == 185) \
+		{ \
+			return Offsets::V185::##name; \
+		} \
+		else if (minorVersion == 200) \
+		{ \
+			return Offsets::V200::##name; \
+		} \
+		else if (minorVersion == 204) \
+		{ \
+			return Offsets::V204::##name; \
+		} \
+		else \
+			std::terminate(); \
+	}()
 
 namespace Offsets
 {
-    constexpr uintptr_t ArgCount = 0x350D80;
-    constexpr uintptr_t GetArgFloat = 0x350DD8;
-    constexpr uintptr_t GetArgInteger = 0x351049;
-    constexpr uintptr_t GetArgString = 0x351018;
-    constexpr uintptr_t DeleteItem = 0x34C3D7;
-    constexpr uintptr_t CreateCmd = 0x34C3F7;
-    constexpr uintptr_t RegisterHandler = 0x34C337;
-    constexpr uintptr_t inSatellite = 0x277848;
-    constexpr uintptr_t netPlayerInfoArray = 0x1C705C;
-    constexpr uintptr_t activeConfigMod = 0x102708;
-} // namespace Offsets
+	inline const uintptr_t ArgCount           = RESOLVE_VERSIONED_OFFSET(ArgCount);
+    inline const uintptr_t GetArgFloat        = RESOLVE_VERSIONED_OFFSET(GetArgFloat);
+    inline const uintptr_t GetArgInteger      = RESOLVE_VERSIONED_OFFSET(GetArgInteger);
+    inline const uintptr_t GetArgString       = RESOLVE_VERSIONED_OFFSET(GetArgString);
+    inline const uintptr_t DeleteItem         = RESOLVE_VERSIONED_OFFSET(DeleteItem);
+    inline const uintptr_t CreateCmd          = RESOLVE_VERSIONED_OFFSET(CreateCmd);
+    inline const uintptr_t RegisterHandler    = RESOLVE_VERSIONED_OFFSET(RegisterHandler);
+    inline const uintptr_t inSatellite        = RESOLVE_VERSIONED_OFFSET(inSatellite);
+    inline const uintptr_t netPlayerInfoArray = RESOLVE_VERSIONED_OFFSET(netPlayerInfoArray);
+    inline const uintptr_t activeConfigMod    = RESOLVE_VERSIONED_OFFSET(activeConfigMod);
+    inline const uintptr_t misnExport         = RESOLVE_VERSIONED_OFFSET(misnExport);
+}

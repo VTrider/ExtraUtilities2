@@ -8,6 +8,19 @@ This mod targets the bleeding edge build of BZCC and should be able to update to
 - Follows stock conventions: ie. functions that take a position are overloaded for handle, matrix, and vector
 - Plug and play as an asset pack
 
+## Compatibility
+
+This mod is compatible with the following game versions. Notably 185 does not have LuaMission support due to inherent limitations of that version.
+I highly discourage targeting 185 for new mods, but if you still require 185 compatibility you can use a DLL mission.
+
+| | LuaMission | DLL Mission |
+| -| ---------- | ----------- |
+| 185 (Stock) | ❌ | ✅ |
+| 200 (Public Beta) | ✅ | ✅ |
+| 204 (Private Beta) | ✅ | ✅ |
+
+Only tested on Windows and Steam.
+
 ## Tutorial
 
 Before using this mod you should have very advanced knowledge of your desired platform (either Lua or C++), and BZCC modding in general.

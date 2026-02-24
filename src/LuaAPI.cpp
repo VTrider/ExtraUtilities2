@@ -214,6 +214,12 @@ namespace exu2::lua
 
 	extern "C" __declspec(dllexport) int luaopen_ExtraUtilities2(lua_State* L)
 	{
+		if (exu2::GetGameMinorVersion() == 185)
+		{
+			exu2::GetMissionExport()->misnImport->FailMission(0.0f, "185.txt");
+			return 0;
+		}
+
 		constexpr luaL_Reg EXPORT_TABLE[] = {
 			EXPORT(GetPerspectiveMatrix)
 			EXPORT(GetViewMatrix)

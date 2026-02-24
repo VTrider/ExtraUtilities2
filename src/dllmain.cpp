@@ -7,14 +7,18 @@
 #include <delayimp.h>
 
 #include <cstring>
-#include <exception>
-#include <format>
 
 namespace exu2
 {
 	void Startup()
 	{
-		PrintConsoleMessage(std::format("Running Extra Utilities 2 v{} by VTrider", GetDLLVersion()).c_str());
+		if (int ver = GetGameMinorVersion(); ver  < MINIMUM_REQUIRED_VERSION)
+		{
+			std::wstring message = std::format(L"Game version {} is incompatible. Minimum required version is {}", ver, MINIMUM_REQUIRED_VERSION);
+			MessageBoxW(NULL, message.c_str(), L"Extra Utilities 2", MB_APPLMODAL | MB_ICONERROR);
+			std::terminate();
+		}
+		PrintConsoleMessage("Running Extra Utilities 2 v{} by VTrider", GetDLLVersion());
 	}
 
 	void Shutdown()
@@ -50,11 +54,7 @@ FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayL
 	{
 		if (dliNotify == dliFailGetProc)
 		{
-			const wchar_t* msg = L"This mod is using a custom LuaMission.dll that does not provide "
-								  "exports for the Lua C API. This is highly discouraged. Please contact "
-								  "the mod author to update it to conform to stock standards.";
-			MessageBoxW(NULL, msg, L"Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
-			std::terminate();
+			exu2::GetMissionExport()->misnImport->FailMission(0.0f, "custom_lm.txt");
 		}
 	}
 

@@ -1,0 +1,1 @@
+This mod is using a custom LuaMission.dll that does not provide exports for the Lua C API. This is highly discouraged. Please contact the mod author to update it to conform to stock standards.

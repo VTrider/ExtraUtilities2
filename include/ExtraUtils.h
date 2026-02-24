@@ -13,6 +13,7 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <format>
 
 namespace exu2
 {
@@ -44,13 +45,14 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* headerVersion = "1.2.0";
+	constexpr const char* HEADER_VERSION = "1.2.0";
+#else
+	EXUAPI int DLLAPI GetGameMinorVersion();
+	constexpr int MINIMUM_REQUIRED_VERSION = 185;
 #endif
 
 	// Returns the current dll version Major.Minor.Patch
 	EXUAPI const char* DLLAPI GetDLLVersion();
-
-	[[deprecated]] constexpr const char* gameVersion = "2.0.204.1";
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
 
@@ -138,6 +140,13 @@ namespace exu2
 	// Gets the current viewport size in pixels (X, Y)
 	EXUAPI iVector2 GetViewportSize();
 
+	// Mission
+
+	// Gets the current MisnExport and MisnExport2 structs if you don't
+	// have access to them (maybe an injected context).
+	EXUAPI const MisnExport* const DLLAPI GetMissionExport();
+	EXUAPI const MisnExport2* const DLLAPI GetMissionExport2();
+
 	// Steam
 
 	// Gets the name of the active config mod ie. "1325933293.cfg". This will be the
@@ -168,6 +177,14 @@ namespace exu2
 	// The magic number is usually 0 in the game's code so I recommend passing that in, anything else is untested.
 	// UNABLE TO BE BOUND IN LUA
 	EXUAPI void DLLAPI VarSys_RegisterHandler(ConstName name, VarSysHandler handler, unsigned long magic);
+
+	// DLL Only Helpers
+
+	template <typename... Args>
+	void PrintConsoleMessage(std::string_view fmt, Args&&... args)
+	{
+		::PrintConsoleMessage(std::vformat(fmt, std::make_format_args(args...)).c_str());
+	}
 
 	// Same as the lua function
 	inline int GetTPS()

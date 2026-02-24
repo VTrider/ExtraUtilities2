@@ -17,12 +17,16 @@
     <ClCompile Include="src\ExtraUtils.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\LuaAPI.cpp" />
+    <ClCompile Include="src\Mission.cpp" />
     <ClCompile Include="src\Steam.cpp" />
     <ClCompile Include="src\VarSys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ExtraUtils.h" />
     <ClInclude Include="include\Offsets.h" />
+    <ClInclude Include="include\Offsets185.h" />
+    <ClInclude Include="include\Offsets200.h" />
+    <ClInclude Include="include\Offsets204.h" />
     <ClInclude Include="resource\resource.h" />
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\BasicScanner.h" />
@@ -90,7 +94,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>LuaMission.lib;battlezone2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LuaMission.lib;battlezone2.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <DelayLoadDLLs>LuaMission.dll</DelayLoadDLLs>
@@ -120,7 +124,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>LuaMission.lib;battlezone2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LuaMission.lib;battlezone2.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
       <LargeAddressAware>true</LargeAddressAware>
       <DelayLoadDLLs>LuaMission.dll</DelayLoadDLLs>

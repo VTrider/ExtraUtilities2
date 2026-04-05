@@ -45,7 +45,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.2.0";
+	constexpr const char* HEADER_VERSION = "1.3.0";
 #else
 	EXUAPI int DLLAPI GetGameMinorVersion();
 	constexpr int MINIMUM_REQUIRED_VERSION = 185;

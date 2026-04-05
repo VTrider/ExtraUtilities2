@@ -59,8 +59,6 @@ namespace BZCC
 	namespace Mission
 	{
 		inline MisnExport** p_misnExport =  *reinterpret_cast<MisnExport***>(moduleBase + Offsets::misnExport);
-		inline const MisnExport* const misnExport = *p_misnExport;
-		inline const MisnExport2* const misnExport2 = *reinterpret_cast<MisnExport2**>(reinterpret_cast<uintptr_t>(p_misnExport) - 4);
 	}
 
 #pragma pack(push, 1)

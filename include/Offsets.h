@@ -2,6 +2,7 @@
 
 #include "Offsets185.h"
 #include "Offsets200.h"
+#include "Offsets203.h"
 #include "Offsets204.h"
 
 #include "ExtraUtils.h"
@@ -17,6 +18,10 @@
 		else if (minorVersion == 200) \
 		{ \
 			return Offsets::V200::##name; \
+		} \
+		else if (minorVersion == 203) \
+		{ \
+			return Offsets::V203::##name; \
 		} \
 		else if (minorVersion == 204) \
 		{ \

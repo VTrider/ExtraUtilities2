@@ -92,6 +92,9 @@
     <ClInclude Include="include\Offsets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Offsets203.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\ExtraUtilities2.rc">

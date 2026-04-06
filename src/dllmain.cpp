@@ -23,6 +23,7 @@ namespace exu2
 
 	void Shutdown()
 	{
+		VarSys_UninstallGlobalHandler();
 		if (GetModuleHandleW(L"LuaMission.dll"))
 		{
 			__FUnloadDelayLoadedDLL2("LuaMission.dll");

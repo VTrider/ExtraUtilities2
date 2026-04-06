@@ -10,6 +10,7 @@
 
 #include <Windows.h>
 #include <delayimp.h>
+#undef CONST
 
 #include <cstdint>
 #include <filesystem>
@@ -164,8 +165,7 @@ namespace exu2
 
 	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
 	// it will not seen by the current mission's ProcessCommand function. You can use VarSys_RegisterHandler to set
-	// a custom handler that can even work outside of a game. WARNING: these commands are NODELETE by default
-	// and I don't know why, so this function probably isn't too useful. UNABLE TO BE BOUND IN LUA
+	// a custom handler that can even work outside of a game. UNABLE TO BE BOUND IN LUA
 	EXUAPI void DLLAPI VarSys_CreateCmd(ConstName name);
 
 	// Deletes an IFace item and all its subdirectories, returns true if
@@ -177,6 +177,25 @@ namespace exu2
 	// The magic number is usually 0 in the game's code so I recommend passing that in, anything else is untested.
 	// UNABLE TO BE BOUND IN LUA
 	EXUAPI void DLLAPI VarSys_RegisterHandler(ConstName name, VarSysHandler handler, unsigned long magic);
+
+	// Installs a global command handler. This handles anything in the "global scope" like "ls"
+	// or "help"
+	EXUAPI void DLLAPI VarSys_InstallGlobalHandler(VarSysHandler handler);
+
+	// Uninstalls the installed global handler if it exists
+	EXUAPI void DLLAPI VarSys_UninstallGlobalHandler();
+
+	enum class VarFlag : uint32_t {
+		CONST = 0x4,
+		NODELETE = 0x8000
+	};
+
+	// Checks if a flag is set on an IFace variable/VarItem and stores the status in `flagStatus`.
+	// Returns true if the var exists, false otherwise.
+	EXUAPI bool DLLAPI VarSys_GetVarFlag(ConstName name, VarFlag flag, bool& flagStatus);
+
+	// Sets a flag on an IFace variable/VarItem. Returns true if the var exists, false otherwise.
+	EXUAPI bool DLLAPI VarSys_SetVarFlag(ConstName name, VarFlag flag, bool status);
 
 	// DLL Only Helpers
 

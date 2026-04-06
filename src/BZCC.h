@@ -4,6 +4,7 @@
 
 #include <ScriptUtils.h>
 #include <Windows.h>
+#undef CONST
 
 #include <cstdint>
 
@@ -94,5 +95,32 @@ namespace BZCC
 
 		using CreateCmd_t = void(__cdecl*)(ConstName name);
 		inline const CreateCmd_t CreateCmd = (CreateCmd_t)(moduleBase + Offsets::CreateCmd);
+
+		class VarScope
+		{
+		public:
+			uint8_t pad_1[0x28];
+			VarSysHandler handler;
+		};
+
+		inline VarScope** const p_gScope = *reinterpret_cast<VarScope***>(moduleBase + Offsets::globalHandler);
+
+		class VarItem
+		{
+		public:
+			enum class Flag : uint32_t
+			{
+				CONST = 0x4,
+				NODELETE = 0x8000
+			};
+
+			uint8_t pad_1[0x18];
+			uint32_t flags; // if 0x8000 is set, the var is NODELETE
+		};
+
+		using FindVarItem_t = VarItem*(__fastcall*)(ConstName name);
+		// inline const FindVarItem_t FindVarItem = (FindVarItem_t)(reinterpret_cast<uintptr_t>(IFace_CreateCommand) + 20);
+		// TODO: make pattern scan or something for this, current offset is for 203
+		inline const FindVarItem_t FindVarItem = (FindVarItem_t)(moduleBase + 0x34B0EF); 
 	}
 }

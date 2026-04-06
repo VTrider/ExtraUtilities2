@@ -44,4 +44,5 @@ namespace Offsets
     inline const uintptr_t netPlayerInfoArray = RESOLVE_VERSIONED_OFFSET(netPlayerInfoArray);
     inline const uintptr_t activeConfigMod    = RESOLVE_VERSIONED_OFFSET(activeConfigMod);
     inline const uintptr_t misnExport         = RESOLVE_VERSIONED_OFFSET(misnExport);
+	inline const uintptr_t globalHandler      = RESOLVE_VERSIONED_OFFSET(globalHandler);
 }

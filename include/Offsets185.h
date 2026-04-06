@@ -15,4 +15,5 @@ namespace Offsets::V185
     constexpr uintptr_t netPlayerInfoArray = 0x1B5B68;
     constexpr uintptr_t activeConfigMod = 0xFBBC2;
     constexpr uintptr_t misnExport = 0xA086D;
+    constexpr uintptr_t globalHandler = 0x332DDA;
 } // namespace Offsets

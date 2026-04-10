@@ -102,8 +102,8 @@ namespace exu2
 	// be a minimum of 1, subtract 1 for the real count of arguments supplied
 	EXUAPI int DLLAPI IFace_GetArgCount();
 
-	// The out parameter in these three functions should not be a nullptr,
-	// return value is true if it could parse the correct data type, false if not.
+	// The out parameter in these three functions should not be a nullptr, it will return false.
+	// Return value is true if it could parse the correct data type, false if not.
 	// In C++ you should initialize the value to 0 or nullptr in the case of GetArgString,
 	// in Lua it will always return nil if the function fails
 

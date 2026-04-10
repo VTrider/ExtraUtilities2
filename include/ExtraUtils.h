@@ -48,9 +48,11 @@ namespace exu2
 	// your header is up to date with the latest DLL.
 	constexpr const char* HEADER_VERSION = "1.3.0";
 #else
-	EXUAPI int DLLAPI GetGameMinorVersion();
 	constexpr int MINIMUM_REQUIRED_VERSION = 185;
 #endif
+
+	// Returns the minor version of the game, use this if your mod only supports a certain version(s)
+	EXUAPI int DLLAPI GetGameMinorVersion();
 
 	// Returns the current dll version Major.Minor.Patch
 	EXUAPI const char* DLLAPI GetDLLVersion();

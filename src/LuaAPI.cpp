@@ -93,7 +93,7 @@ namespace exu2::lua
 	{
 		int arg = luaL_checkinteger(L, 1);
 		float value{};
-		bool success = exu2::IFace_GetArgFloat(arg, &value);
+		bool success = exu2::IFace_GetArgFloat(arg, value);
 
 		if (success)
 		{
@@ -113,7 +113,7 @@ namespace exu2::lua
 	{
 		int arg = luaL_checkinteger(L, 1);
 		int value{};
-		bool success = exu2::IFace_GetArgInteger(arg, &value);
+		bool success = exu2::IFace_GetArgInteger(arg, value);
 
 		if (success)
 		{
@@ -133,11 +133,31 @@ namespace exu2::lua
 	{
 		int arg = luaL_checkinteger(L, 1);
 		char* value = nullptr;
-		bool success = exu2::IFace_GetArgString(arg, &value);
+		bool success = exu2::IFace_GetArgString(arg, value);
 
 		if (success && value != nullptr)
 		{
 			lua_pushstring(L, value);
+		}
+		else
+		{
+			lua_pushnil(L);
+		}
+
+		lua_pushboolean(L, success);
+
+		return 2;
+	}
+
+	int IFace_GetArgBool(lua_State* L)
+	{
+		int arg = luaL_checkinteger(L, 1);
+		bool value;
+		bool success = exu2::IFace_GetArgBool(arg, value);
+
+		if (success)
+		{
+			lua_pushboolean(L, value);
 		}
 		else
 		{

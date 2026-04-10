@@ -102,19 +102,23 @@ namespace exu2
 	// be a minimum of 1, subtract 1 for the real count of arguments supplied
 	EXUAPI int DLLAPI IFace_GetArgCount();
 
-	// The out parameter in these three functions should not be a nullptr, it will return false.
 	// Return value is true if it could parse the correct data type, false if not.
+	// The out parameter will not be modified if the function returns false.
 	// In C++ you should initialize the value to 0 or nullptr in the case of GetArgString,
 	// in Lua it will always return nil if the function fails
 
 	// Gets a float value at the given position if it exists
-	EXUAPI bool DLLAPI IFace_GetArgFloat(int arg, float* value);
+	EXUAPI bool DLLAPI IFace_GetArgFloat(int arg, float& value);
 
 	// Gets an integer value at the given position if it exists
-	EXUAPI bool DLLAPI IFace_GetArgInteger(int arg, int* value);
+	EXUAPI bool DLLAPI IFace_GetArgInteger(int arg, int& value);
 
 	// Gets a string value at the given position if it exists
-	EXUAPI bool DLLAPI IFace_GetArgString(int arg, char** value);
+	EXUAPI bool DLLAPI IFace_GetArgString(int arg, char*& value);
+
+	// Gets a bool value at the given position if it exists.
+	// Accepts "true" or "false", or,  0 or 1
+	EXUAPI bool DLLAPI IFace_GetArgBool(int arg, bool& value);
 
 	// Filesystem
 

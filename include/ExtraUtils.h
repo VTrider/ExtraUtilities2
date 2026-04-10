@@ -18,7 +18,7 @@
 
 namespace exu2
 {
-#ifndef EXU_EXPORTS
+#ifdef EXU_EXPORTS
 	const std::filesystem::path GetWorkshopPath();
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
@@ -26,14 +26,14 @@ namespace exu2
 	// version of the library currently on the steam workshop. If you are using a custom or
 	// development build, you must set the dll directory accordingly. See the README on
 	// GitHub for more info.
-	inline void ProcessAttach()
+	inline void ProcessAttach(const std::filesystem::path& dllDirectory = GetWorkshopPath() / "3515140097" / "Bin")
 	{
 		SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
 								 LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 
 								 LOAD_LIBRARY_SEARCH_SYSTEM32 |
 								 LOAD_LIBRARY_SEARCH_USER_DIRS
         );
-		AddDllDirectory((GetWorkshopPath() / "3515140097" / "Bin").c_str());
+		AddDllDirectory(dllDirectory.wstring().c_str());
 	}
 
 	inline void ProcessDetach()
@@ -59,7 +59,7 @@ namespace exu2
 
 	using VarSysHandler = void(__cdecl*)(unsigned long crc);
 
-	struct iVector2
+	struct IVector2
 	{
 		int x, y;
 	};
@@ -126,7 +126,7 @@ namespace exu2
 	// Graphics
 
 	// Gets the current viewport size in pixels (X, Y)
-	EXUAPI iVector2 GetViewportSize();
+	EXUAPI IVector2 GetViewportSize();
 
 	// Mission
 

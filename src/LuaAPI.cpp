@@ -155,6 +155,12 @@ namespace exu2::lua
 		return 1;
 	}
 
+	int GetMyDocs(lua_State* L)
+	{
+		lua_pushstring(L, exu2::GetMyDocs().string().c_str());
+		return 1;
+	}
+
 	int GetWorkshopPath(lua_State* L)
 	{
 		lua_pushstring(L, exu2::GetWorkshopPath().string().c_str());
@@ -163,7 +169,7 @@ namespace exu2::lua
 
 	int GetViewportSize(lua_State* L)
 	{
-		iVector2 viewport = exu2::GetViewportSize();
+		IVector2 viewport = exu2::GetViewportSize();
 
 		lua_pushinteger(L, viewport.x);
 		lua_pushinteger(L, viewport.y);
@@ -231,6 +237,7 @@ namespace exu2::lua
 			EXPORT(IFace_GetArgInteger)
 			EXPORT(IFace_GetArgString)
 			EXPORT(GetBZCCPath)
+			EXPORT(GetMyDocs)
 			EXPORT(GetWorkshopPath)
 			EXPORT(GetViewportSize)
 			EXPORT(GetActiveConfigMod)

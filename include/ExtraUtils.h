@@ -18,7 +18,7 @@
 
 namespace exu2
 {
-#ifdef EXU_EXPORTS
+#ifndef EXU_EXPORTS
 	const std::filesystem::path GetWorkshopPath();
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH

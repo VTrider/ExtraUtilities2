@@ -19,7 +19,7 @@
 namespace exu2
 {
 #ifndef EXU_EXPORTS
-	std::filesystem::path GetWorkshopPath();
+	const std::filesystem::path GetWorkshopPath();
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
 	// respectively if you are using this library in a dll mission. By default this uses the 
@@ -33,7 +33,7 @@ namespace exu2
 								 LOAD_LIBRARY_SEARCH_SYSTEM32 |
 								 LOAD_LIBRARY_SEARCH_USER_DIRS
         );
-        AddDllDirectory(GetWorkshopPath().append("3515140097").append("Bin").c_str());
+		AddDllDirectory((GetWorkshopPath() / "3515140097" / "Bin").c_str());
 	}
 
 	inline void ProcessDetach()
@@ -46,7 +46,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.3.0";
+	constexpr const char* HEADER_VERSION = "1.4.0";
 #else
 	constexpr int MINIMUM_REQUIRED_VERSION = 185;
 #endif

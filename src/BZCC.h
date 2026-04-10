@@ -119,8 +119,13 @@ namespace BZCC
 		};
 
 		using FindVarItem_t = VarItem*(__fastcall*)(ConstName name);
-		// inline const FindVarItem_t FindVarItem = (FindVarItem_t)(reinterpret_cast<uintptr_t>(IFace_CreateCommand) + 20);
-		// TODO: make pattern scan or something for this, current offset is for 203
-		inline const FindVarItem_t FindVarItem = (FindVarItem_t)(moduleBase + 0x34B0EF); 
+
+		inline const FindVarItem_t FindVarItem = []()
+		{
+			uintptr_t call_find_var_item = reinterpret_cast<uintptr_t>(IFace_CreateCommand) + 19;
+			uintptr_t next_instruction = call_find_var_item + 5;
+			uintptr_t relative_jmp_offset = *reinterpret_cast<uintptr_t*>(call_find_var_item + 1);
+			return reinterpret_cast<FindVarItem_t>(next_instruction + relative_jmp_offset);
+		}();
 	}
 }

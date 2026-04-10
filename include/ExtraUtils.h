@@ -53,6 +53,9 @@ namespace exu2
 
 	// Returns the minor version of the game, use this if your mod only supports a certain version(s)
 	EXUAPI int DLLAPI GetGameMinorVersion();
+	
+	// Returns the patch version of the game
+	EXUAPI int DLLAPI GetGamePatchVersion();
 
 	// Returns the current dll version Major.Minor.Patch
 	EXUAPI const char* DLLAPI GetDLLVersion();

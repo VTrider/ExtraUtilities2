@@ -86,13 +86,16 @@
     <ClInclude Include="include\Offsets200.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Offsets204.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Offsets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Offsets203.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Offsets204.0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Offsets204.1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

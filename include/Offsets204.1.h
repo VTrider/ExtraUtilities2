@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Offsets::V204
+namespace Offsets::V204_1
 {
     constexpr uintptr_t ArgCount = 0x350D80;
     constexpr uintptr_t GetArgFloat = 0x350DD8;

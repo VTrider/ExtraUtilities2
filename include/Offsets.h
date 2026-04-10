@@ -3,7 +3,8 @@
 #include "Offsets185.h"
 #include "Offsets200.h"
 #include "Offsets203.h"
-#include "Offsets204.h"
+#include "Offsets204.0.h"
+#include "Offsets204.1.h"
 
 #include "ExtraUtils.h"
 
@@ -25,7 +26,18 @@
 		} \
 		else if (minorVersion == 204) \
 		{ \
-			return Offsets::V204::##name; \
+			if (int patch = exu2::GetGamePatchVersion() == 0) \
+			{ \
+				return Offsets::V204_0::##name; \
+			} \
+			else if (patch == 1) \
+			{ \
+				return Offsets::V204_1::##name; \
+			} \
+			else \
+			{ \
+				std::terminate(); \
+			} \
 		} \
 		else \
 			std::terminate(); \

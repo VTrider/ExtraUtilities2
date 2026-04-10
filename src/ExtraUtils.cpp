@@ -8,12 +8,11 @@ namespace exu2
 
 	EXUAPI int DLLAPI GetGameMinorVersion()
 	{
-		DWORD handle;
 		auto filename = GetBZCCPath() / "battlezone2.exe";
-		if (DWORD size = GetFileVersionInfoSizeW(filename.c_str(), &handle))
+		if (DWORD size = GetFileVersionInfoSizeW(filename.c_str(), 0))
 		{
 			auto versionData = std::make_unique<BYTE[]>(size);
-			if (GetFileVersionInfoW(filename.c_str(), handle, size, versionData.get()))
+			if (GetFileVersionInfoW(filename.c_str(), 0, size, versionData.get()))
 			{
 				UINT infoSize = 0;
 				VS_FIXEDFILEINFO* fixedInfo = nullptr;
@@ -21,11 +20,24 @@ namespace exu2
 				return HIWORD(fixedInfo->dwFileVersionLS);
 			}
 		}
-		else
+		std::terminate();
+	}
+
+	EXUAPI int DLLAPI GetGamePatchVersion()
+	{
+		auto filename = GetBZCCPath() / "battlezone2.exe";
+		if (DWORD size = GetFileVersionInfoSizeW(filename.c_str(), 0))
 		{
-			std::terminate();
+			auto versionData = std::make_unique<BYTE[]>(size);
+			if (GetFileVersionInfoW(filename.c_str(), 0, size, versionData.get()))
+			{
+				UINT infoSize = 0;
+				VS_FIXEDFILEINFO* fixedInfo = nullptr;
+				VerQueryValueW(versionData.get(), L"\\", reinterpret_cast<LPVOID*>(&fixedInfo), &infoSize);
+				return LOWORD(fixedInfo->dwFileVersionLS);
+			}
 		}
-		return {};
+		std::terminate();
 	}
 
 	EXUAPI const char* DLLAPI GetDLLVersion()

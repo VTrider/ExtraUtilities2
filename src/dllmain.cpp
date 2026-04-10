@@ -7,6 +7,8 @@
 #include <delayimp.h>
 
 #include <cstring>
+#include <format>
+#include <string>
 
 namespace exu2
 {
@@ -55,6 +57,7 @@ FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayL
 	{
 		if (dliNotify == dliFailGetProc)
 		{
+			MessageBoxW(NULL, std::format(L"{}", std::to_wstring((int)exu2::GetMissionExport())).c_str(), L"TEST", MB_SYSTEMMODAL);
 			exu2::GetMissionExport()->misnImport->FailMission(0.0f, "custom_lm.txt");
 		}
 	}

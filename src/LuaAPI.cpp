@@ -5,7 +5,7 @@
 
 #include <string>
 
-#define EXPORT(symbol) { #symbol, symbol },
+#define EXPORT(symbol) { #symbol, symbol }
 
 namespace exu2::lua
 {
@@ -232,6 +232,46 @@ namespace exu2::lua
 		return 1;
 	}
 
+	int IFace_GetVarFlag(lua_State* L)
+	{
+		const char* name = luaL_checkstring(L, 1);
+		int tryFlag = luaL_checkinteger(L, 2);
+		bool status;
+		switch (VarFlag flag = static_cast<VarFlag>(tryFlag))
+		{
+			case VarFlag::CONST: [[fallthrough]];
+			case VarFlag::NODELETE:
+			{
+				bool result = VarSys_GetVarFlag(name, flag, status);
+				result ? lua_pushboolean(L, status) : lua_pushnil(L);
+				lua_pushboolean(L, status);
+				return 2;
+			}
+			default:
+				return luaL_error(L, "Extra Utilities 2 Error: Invalid flag");
+		}
+	}
+
+	int IFace_SetVarFlag(lua_State* L)
+	{
+		const char* name = luaL_checkstring(L, 1);
+		int tryFlag = luaL_checkinteger(L, 2);
+		luaL_checktype(L, 3, LUA_TBOOLEAN);
+		bool status = lua_toboolean(L, 3);
+		switch (VarFlag flag = static_cast<VarFlag>(tryFlag))
+		{
+			case VarFlag::CONST: [[fallthrough]];
+			case VarFlag::NODELETE:
+			{
+				bool result = VarSys_SetVarFlag(name, flag, status);
+				lua_pushboolean(L, result);
+				return 1;
+			}
+			default:
+				return luaL_error(L, "Extra Utilities 2 Error: Invalid flag");
+		}
+	}
+
 	void RegisterConstants(lua_State* L)
 	{
 		lua_pushstring(L, exu2::GetDLLVersion());
@@ -247,22 +287,24 @@ namespace exu2::lua
 		}
 
 		constexpr luaL_Reg EXPORT_TABLE[] = {
-			EXPORT(GetPerspectiveMatrix)
-			EXPORT(GetViewMatrix)
-			EXPORT(InSatellite)
-			EXPORT(IsVisible)
-			EXPORT(WorldToScreen)
-			EXPORT(IFace_GetArgCount)
-			EXPORT(IFace_GetArgFloat)
-			EXPORT(IFace_GetArgInteger)
-			EXPORT(IFace_GetArgString)
-			EXPORT(GetBZCCPath)
-			EXPORT(GetMyDocs)
-			EXPORT(GetWorkshopPath)
-			EXPORT(GetViewportSize)
-			EXPORT(GetActiveConfigMod)
-			EXPORT(GetSteam64)
-			EXPORT(IFace_DeleteItem)
+			EXPORT(GetPerspectiveMatrix),
+			EXPORT(GetViewMatrix),
+			EXPORT(InSatellite),
+			EXPORT(IsVisible),
+			EXPORT(WorldToScreen),
+			EXPORT(IFace_GetArgCount),
+			EXPORT(IFace_GetArgFloat),
+			EXPORT(IFace_GetArgInteger),
+			EXPORT(IFace_GetArgString),
+			EXPORT(GetBZCCPath),
+			EXPORT(GetMyDocs),
+			EXPORT(GetWorkshopPath),
+			EXPORT(GetViewportSize),
+			EXPORT(GetActiveConfigMod),
+			EXPORT(GetSteam64),
+			EXPORT(IFace_DeleteItem),
+			EXPORT(IFace_GetVarFlag),
+			EXPORT(IFace_SetVarFlag),
 			{ 0, 0 }
 		};
 		luaL_newlib(L, EXPORT_TABLE);

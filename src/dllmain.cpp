@@ -57,8 +57,11 @@ FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayL
 	{
 		if (dliNotify == dliFailGetProc)
 		{
-			MessageBoxW(NULL, std::format(L"{}", std::to_wstring((int)exu2::GetMissionExport())).c_str(), L"TEST", MB_SYSTEMMODAL);
-			exu2::GetMissionExport()->misnImport->FailMission(0.0f, "custom_lm.txt");
+			const wchar_t* message = L"This mod is using a custom LuaMission.dll that does not provide exports for the Lua C API."
+									  "This is highly discouraged. Please contact the mod author to update it to conform to stock standards.";
+			MessageBoxW(NULL, message, L"Extra Utilities 2", MB_ICONERROR);
+			// this isn't working idk why
+			// exu2::GetMissionExport()->misnImport->FailMission(0.0f, "custom_lm.txt");
 		}
 	}
 

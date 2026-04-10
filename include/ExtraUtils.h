@@ -118,25 +118,10 @@ namespace exu2
 
 	// Filesystem
 
-	inline std::filesystem::path GetBZCCPath()
-	{
-		wchar_t bzccPath[MAX_PATH];
-		GetModuleFileNameW(NULL, bzccPath, MAX_PATH);
-		return std::filesystem::path(bzccPath).parent_path();
-	}
-
-	inline std::filesystem::path GetWorkshopPath()
-	{
-		DWORD size = MAX_PATH;
-		std::wstring steamPath(MAX_PATH, L'\0');
-		RegGetValueW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\WOW6432Node\\Valve\\Steam", L"InstallPath", RRF_RT_REG_SZ, NULL, steamPath.data(), &size);
-
-		steamPath.resize(size / sizeof(wchar_t) - 1);
-		std::filesystem::path workshopPath(steamPath);
-		workshopPath.append("steamapps").append("workshop").append("content").append("624970");
-
-		return workshopPath;
-	}
+	// Helpers for common directories that mods usually use
+	const std::filesystem::path GetBZCCPath();
+	const std::filesystem::path GetMyDocs();
+	const std::filesystem::path GetWorkshopPath();
 
 	// Graphics
 
@@ -214,6 +199,37 @@ namespace exu2
 	}
 
 	// Do not modify
+
+	// These are inline since it's risky to pass an stl object across dll boundaries
+
+	inline const std::filesystem::path GetBZCCPath()
+	{
+		wchar_t bzccPath[MAX_PATH];
+		GetModuleFileNameW(NULL, bzccPath, MAX_PATH);
+		return std::filesystem::path(bzccPath).parent_path();
+	}
+
+	inline const std::filesystem::path GetMyDocs()
+	{
+		size_t bufSize = 0;
+		GetOutputPath(bufSize, nullptr);
+		std::unique_ptr<wchar_t[]> path = std::make_unique<wchar_t[]>(bufSize);
+		GetOutputPath(bufSize, path.get());
+		return std::filesystem::path(path.get());
+	}
+
+	inline const std::filesystem::path GetWorkshopPath()
+	{
+		DWORD size = MAX_PATH;
+		std::wstring steamPath(MAX_PATH, L'\0');
+		RegGetValueW(HKEY_LOCAL_MACHINE, L"SOFTWARE\\WOW6432Node\\Valve\\Steam", L"InstallPath", RRF_RT_REG_SZ, NULL, steamPath.data(), &size);
+
+		steamPath.resize(size / sizeof(wchar_t) - 1);
+		std::filesystem::path workshopPath(steamPath);
+		workshopPath.append("steamapps").append("workshop").append("content").append("624970");
+
+		return workshopPath;
+	}
 
 #ifndef EXU_EXPORTS
 	inline FARPROC WINAPI DelayLoadHandler(unsigned int dliNotify, [[maybe_unused]] PDelayLoadInfo pdli)

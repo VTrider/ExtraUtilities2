@@ -9,7 +9,7 @@ namespace exu2
 	EXUAPI int DLLAPI GetGameMinorVersion()
 	{
 		DWORD handle;
-		auto filename = GetBZCCPath().append("battlezone2.exe");
+		auto filename = GetBZCCPath() / "battlezone2.exe";
 		if (DWORD size = GetFileVersionInfoSizeW(filename.c_str(), &handle))
 		{
 			auto versionData = std::make_unique<BYTE[]>(size);

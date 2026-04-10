@@ -8,13 +8,6 @@ namespace exu2
 	{
 		CreateCmd(name);
 		VarSys_SetVarFlag(name, VarFlag::NODELETE, false);
-
-		// VarItem* item = BZCC::VarSys::FindVarItem(name);
-
-		// clear NODELETE on custom cmds which is enabled by default
-		// and I have no idea how the game does it so we just do it manually
-		//if (item)
-		//	item->flags &= ~std::to_underlying(VarItem::Flag::NODELETE);
 	}
 
 	bool DLLAPI IFace_DeleteItem(ConstName name)

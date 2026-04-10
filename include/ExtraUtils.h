@@ -165,7 +165,7 @@ namespace exu2
 
 	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
 	// it will not seen by the current mission's ProcessCommand function. You can use VarSys_RegisterHandler to set
-	// a custom handler that can even work outside of a game. UNABLE TO BE BOUND IN LUA
+	// a custom handler that can even work outside of a game. IFace_CreateCommand should be used when in a normal mission.
 	EXUAPI void DLLAPI VarSys_CreateCmd(ConstName name);
 
 	// Deletes an IFace item and all its subdirectories, returns true if

@@ -6,7 +6,7 @@
 
 namespace exu2
 {
-	EXUAPI const char* const DLLAPI GetActiveConfigMod()
+	const char* const DLLAPI GetActiveConfigMod()
 	{
 		return BZCC::Steam::activeConfigMod;
 	}
@@ -16,7 +16,7 @@ namespace exu2
 		return *BZCC::Steam::steam64;
 	}
 
-	EXUAPI uint64_t DLLAPI GetSteam64(int team)
+	uint64_t DLLAPI GetSteam64(int team)
 	{
 		if (IsNetworkOn())
 		{

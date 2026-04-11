@@ -32,18 +32,18 @@ namespace exu2
 		stockHandler(crc);
 	}
 
-	EXUAPI void DLLAPI VarSys_InstallGlobalHandler(VarSysHandler handler)
+	void DLLAPI VarSys_InstallGlobalHandler(VarSysHandler handler)
 	{
 		customHandler = handler;
 		(*p_gScope)->handler = GlobalHandlerHook;
 	}
 
-	EXUAPI void DLLAPI VarSys_UninstallGlobalHandler()
+	void DLLAPI VarSys_UninstallGlobalHandler()
 	{
 		(*p_gScope)->handler = stockHandler;
 	}
 
-	EXUAPI bool DLLAPI VarSys_GetVarFlag(ConstName name, VarFlag flag, bool& flagStatus)
+	bool DLLAPI VarSys_GetVarFlag(ConstName name, VarFlag flag, bool& flagStatus)
 	{
 		const VarItem* item = FindVarItem(name);
 		if (!item)
@@ -54,7 +54,7 @@ namespace exu2
 		return true;
 	}
 
-	EXUAPI bool DLLAPI VarSys_SetVarFlag(ConstName name, VarFlag flag, bool status)
+	bool DLLAPI VarSys_SetVarFlag(ConstName name, VarFlag flag, bool status)
 	{
 		VarItem* item = FindVarItem(name);
 		if (!item)

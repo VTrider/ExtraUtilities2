@@ -57,6 +57,10 @@ namespace BZCC
 		inline const GetArgString_t GetArgString = (GetArgString_t)(moduleBase + Offsets::GetArgString);
 	}
 
+	class GameObject {};
+
+	class GameObjectClass {};
+
 	namespace Mission
 	{
 		inline MisnExport** p_misnExport =  *reinterpret_cast<MisnExport***>(moduleBase + Offsets::misnExport);
@@ -77,6 +81,16 @@ namespace BZCC
 		static inline NetPlayerInfo** netPlayerInfoArray = *reinterpret_cast<NetPlayerInfo***>(moduleBase + Offsets::netPlayerInfoArray);
 	};
 #pragma pack(pop)
+
+	class SchedPlan
+	{
+	private:
+		// This is what AIPs use to find buildable terrain, but we can use it outside of an AIP context
+		using GoodSpot_t = bool(__fastcall*)(int team, const GameObjectClass* buildClass, Vector& pos, const Vector& front);
+
+	public:
+		static inline GoodSpot_t GoodSpot = reinterpret_cast<GoodSpot_t>(moduleBase + 0x2A3CC0); // TODO: pattern scan, current offset is 204.0
+	};
 
 	namespace Steam
 	{

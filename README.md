@@ -99,7 +99,7 @@ Ensure that `exu2::ProcessAttach` and `exu2::ProcessDetach` are called in their 
 Take caution when working inside the DllMain switch statement to not allow for case fallthroughs. I recommend
 removing the cases for thread attach/detach unless you specifically need them.
 
-You are now ready to `#include <ExtraUtils.h` and call the functions!
+You are now ready to `#include <ExtraUtils.h>` and call the functions!
 
 ## Updating the Mod
 

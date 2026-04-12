@@ -17,8 +17,9 @@ I highly discourage targeting 185 for new mods, but if you still require 185 com
 | -| ---------- | ----------- |
 | 185 (Stock) | ❌ | ✅ |
 | 200 (Public Beta) | ✅ | ✅ |
-| 203 (Devtest) | ✅ | ✅ |
-| 204 (Private Beta) | ✅ | ✅ |
+| 203 (Previous Devtest) | ✅ | ✅ |
+| 204.0 (Current Devtest) | ✅ | ✅ |
+| 204.1 (Private Beta) | ✅ | ✅ |
 
 Only tested on Windows and Steam.
 

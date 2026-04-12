@@ -30,7 +30,7 @@ If you are an experienced modder and are looking for certain features that the s
 This mod has both a Lua and C++ API. Before going into the platform dependent instructions, there are a few things to do.
 
 - Add the [workshop item](https://steamcommunity.com/sharedfiles/filedetails/?id=3515140097) as an asset dependency for your mod. ID: 3515140097.
-- Ensure you are running the latest private beta build of BZCC.
+- Ensure you are running a compatible version of BZCC.
 
 Using this mod as a vendored dependency where you make a copy of the library to use in your mod is HIGHLY discouraged. You will not get automatic
 updates, you waste space, and having multiple copies of the library in your filesystem could potentially cause major issues. You will not receive support

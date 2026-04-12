@@ -64,7 +64,7 @@ debugging symbols.
 
 In Visual Studio:
 
-- Make sure your C++ version is at least C++17
+- Make sure your C++ version is at least C++20
 - Copy `ExtraUtils.h` into your include directory
 - Copy `ExtraUtilities2.lib` into your lib directory
 - In your project settings go to `Linker -> input` and under `Additional Dependencies` add `ExtraUtilities2.lib`, then under `Delay Loaded Dlls` add `ExtraUtilities2.dll`
@@ -122,28 +122,24 @@ If you are only interested in using the library in your mods you can stop here.
 
 If you want to use the latest development build from source, or use your own custom version, you will need to handle
 the dll loader search path. This mod relies on delay loaded dlls to make usage seamless for the user, and by default it
-targets the dll in the workshop folder which will be the latest stable release. For a custom build you need to make the following
-modifications:
+targets the dll in the workshop folder which will be the latest stable release. For a custom dll mission build you need to make the following
+modifications in your mission dll:
 
 ```cpp
-// ExtraUtils.h
-
-inline void ProcessAttach()
-{
-	SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
-							 LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 
-							 LOAD_LIBRARY_SEARCH_SYSTEM32 |
-							 LOAD_LIBRARY_SEARCH_USER_DIRS
-	);
-	// AddDllDirectory(GetWorkshopPath().append("3515140097").append("Bin").c_str());
-  // Call AddDllDirectory() with the path to your custom ExtraUtilities2.dll to
-  // ensure it gets loaded instead of the workshop build.
-}
+// dllmain.cpp
+// ...
+case DLL_PROCESS_ATTACH:
+	// ...
+	std::filesystem::path customPath(R"(path\to\your\custom\dll\...)"); // you can implement this however you want just pass a path to exu2::ProcessAttach
+	exu2::ProcessAttach(customPath);
 ```
 
-You should also modify the `versionString` and the resource files to indicate that the build is custom.
+If you want to use a custom build in LuaMission you need to set the package.cpath to your build of the exu2 dll.
+See the `ExtraUtils.lua` and `libloader.lua` file in the scripts folder for a reference on how to do this.
+
+You should also modify the `versionString` and the resource files in the exu2 dll to indicate that the build is custom.
 Putting your name and custom version number in `ExtraUtilities2.rc` will do well do differentiate it from
-the workshop build.
+the public workshop build.
 
 ### Custom LuaMission
 

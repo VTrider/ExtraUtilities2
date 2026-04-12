@@ -301,6 +301,14 @@ namespace exu2::lua
 		lua_pushinteger(L, std::to_underlying(INVALID_ODF));
 		lua_setfield(L, -2, "INVALID_ODF");
 		lua_setfield(L, -2, "TerrainQueryResult");
+
+		using enum exu2::VarFlag;
+		lua_createtable(L, 0, 2);
+		lua_pushinteger(L, std::to_underlying(CONST));
+		lua_setfield(L, -2, "CONST");
+		lua_pushinteger(L, std::to_underlying(NODELETE));
+		lua_setfield(L, -2, "NODELETE");
+		lua_setfield(L, -2, "VarFlag");
 	}
 
 	extern "C" __declspec(dllexport) int luaopen_ExtraUtilities2(lua_State* L)

@@ -7,8 +7,21 @@
 
 error("This is a definition file, use require(\"ExtraUtilities2\")")
 
+--- @class _
+
+--- @class TerrainQueryResult
+--- @field NOT_BUILDABLE _
+--- @field BUILDABLE _
+--- @field INVALID_ODF _
+
+--- @class VarFlag
+--- @field CONST _
+--- @field NODELETE _
+local VarFlag = {}
+
 --- @class exu2
 --- @field VERSION string
+--- @field VarFlag VarFlag
 local exu2 = {}
 
 --- Camera
@@ -128,11 +141,41 @@ function exu2.GetSteam64() end
 --- @return string | nil
 function exu2.GetSteam64(team) end
 
+--- Terrain
+
+--- Queries if the tile closest to `pos` is valid for building the given `team` and `odf`. `front` is the direction
+--- the building is facing. BUILDABLE if the tile is buildable and fills the out parameter `pos` with
+--- the resulting build matrix position. Returns NOT_BUILDABLE if the tile is not buildable and `pos` is unmodified.
+--- Returns INVALID_ODF if the odf does not have a GameObjectClass associated with it (probably malformed in some way)
+--- IMPORTANT NOTE if you don't want the game to stutter the first time you call this function for a given odf,
+--- make sure to call PreloadODF(odf) in InitialSetup/Start or wherever you want beforehand.
+--- @param team integer
+--- @param odf string
+--- @param pos Vector
+--- @param front Vector
+--- @return Vector buildMatrixPos
+--- @return TerrainQueryResult status
+function exu2.IsTerrainBuildable(team, odf, pos, front) end
+
 --- VarSys
 
 --- Deletes an IFace item and all its subdirectories.
 --- @param name string
 --- @return boolean success
 function exu2.IFace_DeleteItem(name) end
+
+--- Checks if a flag is set on an IFace variable/VarItem.
+--- @param name string
+--- @param flag VarFlag
+--- @return boolean | nil status nil if the flag does not exist, otherwise the status of the flag
+--- @return boolean exists does the flag exist?
+function exu2.IFace_GetVarFlag(name, flag) end
+
+--- Setes a flag on an IFace variable/VarItem
+--- @param name string
+--- @param flag VarFlag
+--- @param status boolean
+--- @return boolean | nil exists
+function exu2.IFace_SetVarFlag(name, flag, status) end
 
 return exu2

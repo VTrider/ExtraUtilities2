@@ -224,6 +224,21 @@ namespace exu2::lua
 		return 1;
 	}
 
+	int IsTerrainBuildable(lua_State* L)
+	{
+		int team = luaL_checkinteger(L, 1);
+		const char* odf = luaL_checkstring(L, 2);
+		Vector pos = *RequireVector(L, 3);
+		const Vector* front = RequireVector(L, 4);
+		exu2::TerrainQueryResult result = exu2::IsTerrainBuildable(team, odf, pos, *front);
+
+		using enum exu2::TerrainQueryResult;
+		(result == BUILDABLE) ? PushVector(L, pos) : lua_pushnil(L);
+		lua_pushinteger(L, std::to_underlying(result));
+
+		return 2;
+	}
+
 	int IFace_DeleteItem(lua_State* L)
 	{
 		ConstName name = luaL_checkstring(L, 1);
@@ -276,6 +291,16 @@ namespace exu2::lua
 	{
 		lua_pushstring(L, exu2::GetDLLVersion());
 		lua_setfield(L, -2, "VERSION");
+
+		using enum exu2::TerrainQueryResult;
+		lua_createtable(L, 0, 3);
+		lua_pushinteger(L, std::to_underlying(NOT_BUILDABLE));
+		lua_setfield(L, -2, "NOT_BUILDABLE");
+		lua_pushinteger(L, std::to_underlying(BUILDABLE));
+		lua_setfield(L, -2, "BUILDABLE");
+		lua_pushinteger(L, std::to_underlying(INVALID_ODF));
+		lua_setfield(L, -2, "INVALID_ODF");
+		lua_setfield(L, -2, "TerrainQueryResult");
 	}
 
 	extern "C" __declspec(dllexport) int luaopen_ExtraUtilities2(lua_State* L)
@@ -302,6 +327,7 @@ namespace exu2::lua
 			EXPORT(GetViewportSize),
 			EXPORT(GetActiveConfigMod),
 			EXPORT(GetSteam64),
+			EXPORT(IsTerrainBuildable),
 			EXPORT(IFace_DeleteItem),
 			EXPORT(IFace_GetVarFlag),
 			EXPORT(IFace_SetVarFlag),

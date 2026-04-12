@@ -158,7 +158,7 @@ namespace exu2
 
 	// Terrain
 
-	enum class TerrainQueryResult
+	enum class TerrainQueryResult : uint32_t
 	{
 		NOT_BUILDABLE,
 		BUILDABLE,

@@ -19,6 +19,7 @@
     <ClCompile Include="src\LuaAPI.cpp" />
     <ClCompile Include="src\Mission.cpp" />
     <ClCompile Include="src\Steam.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\VarSys.cpp" />
   </ItemGroup>
   <ItemGroup>

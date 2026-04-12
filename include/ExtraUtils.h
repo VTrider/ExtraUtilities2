@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <format>
+#include <string>
 
 namespace exu2
 {
@@ -155,6 +156,23 @@ namespace exu2
 	// Returns 0 if there is no player associated with the team.
 	EXUAPI uint64_t DLLAPI GetSteam64(int team);
 
+	// Terrain
+
+	enum class TerrainQueryResult
+	{
+		NOT_BUILDABLE,
+		BUILDABLE,
+		INVALID_ODF
+	};
+
+	// Queries if the tile closest to `pos` is valid for building the given `team` and `odf`. `front` is the direction
+	// the building is facing. BUILDABLE if the tile is buildable and fills the out parameter `pos` with
+	// the resulting build matrix position. Returns NOT_BUILDABLE if the tile is not buildable and `pos` is unmodified.
+	// Returns INVALID_ODF if the odf does not have a GameObjectClass associated with it (probably malformed in some way)
+	// IMPORTANT NOTE: if you don't want the game to stutter the first time you call this function for a given odf,
+	// make sure to call PreloadODF(odf) in InitialSetup/Start or wherever you want beforehand.
+	EXUAPI TerrainQueryResult DLLAPI IsTerrainBuildable(int team, const char* odf, Vector& pos, const Vector& front);
+
 	// VarSys
 
 	// Low level create command. Creates an "unregistered" VarSys command, it will show up in the `ls` command but
@@ -261,4 +279,32 @@ namespace exu2
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliNotifyHook2 = DelayLoadHandler;
 	extern "C" __declspec(selectany) const PfnDliHook  __pfnDliFailureHook2 = DelayLoadHandler;
 #endif
+}
+
+namespace std
+{
+	using namespace exu2;
+
+	template <>
+	struct formatter<TerrainQueryResult>: formatter<string>
+	{
+		auto format(TerrainQueryResult r, format_context& ctx) const
+		{
+			using enum TerrainQueryResult;
+			std::string str;
+			switch (r)
+			{
+			case NOT_BUILDABLE:
+				str = "NOT_BUILDABLE";
+				break;
+			case BUILDABLE:
+				str = "BUILDABLE";
+				break;
+			case INVALID_ODF:
+				str = "INVALID_ODF";
+				break;
+			}
+			return format_to(ctx.out(), "{}", str);
+		}
+	};
 }

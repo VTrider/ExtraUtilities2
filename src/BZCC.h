@@ -57,9 +57,34 @@ namespace BZCC
 		inline const GetArgString_t GetArgString = (GetArgString_t)(moduleBase + Offsets::GetArgString);
 	}
 
-	class GameObject {};
+	class GameObjectClass;
 
-	class GameObjectClass {};
+	class GameObject
+	{
+	private:
+		using GetObj_t = GameObject*(__fastcall*)(Handle h);
+
+	public:
+		uint8_t pad_1[0x11E];
+		GameObjectClass* objClass; // UNTESTED
+
+		static inline const GetObj_t GetObj = []() // UNTESTED
+		{
+			uintptr_t call_set_as_user = reinterpret_cast<uintptr_t>(SetAsUser) + 7;
+			uintptr_t next_instruction = call_set_as_user + 5;
+			uintptr_t relative_jmp_offset = *reinterpret_cast<uintptr_t*>(call_set_as_user + 1);
+			return reinterpret_cast<GetObj_t>(next_instruction + relative_jmp_offset);
+		}();
+	};
+
+	class GameObjectClass 
+	{
+	private:
+		using Find_t = GameObjectClass*(__fastcall*)(const char* odf);
+
+	public:
+		static inline Find_t Find = reinterpret_cast<Find_t>(moduleBase + 0x166E2B); // TODO: pattern scan, currently 204.0
+	};
 
 	namespace Mission
 	{
@@ -88,8 +113,27 @@ namespace BZCC
 		// This is what AIPs use to find buildable terrain, but we can use it outside of an AIP context
 		using GoodSpot_t = bool(__fastcall*)(int team, const GameObjectClass* buildClass, Vector& pos, const Vector& front);
 
+		// WARNING: the base function uses a custom calling convention where the parameters are in fastcall order
+		// but the caller cleans up the stack, you should not use this directly
+		static inline const GoodSpot_t GoodSpotUnsafe = reinterpret_cast<GoodSpot_t>(moduleBase + 0x2A3CC0); // TODO: pattern scan, current offset is 204.0
+
 	public:
-		static inline GoodSpot_t GoodSpot = reinterpret_cast<GoodSpot_t>(moduleBase + 0x2A3CC0); // TODO: pattern scan, current offset is 204.0
+		// Wrapper over the game function that accounts for the custom calling convention
+		static bool GoodSpot(int team, const GameObjectClass* buildClass, Vector& pos, const Vector& front)
+		{
+			bool result;
+			__asm
+			{
+				push front
+				push pos
+				mov edx, buildClass
+				mov ecx, team
+				call GoodSpotUnsafe
+				mov result, al
+				add esp, 0x08
+			}
+			return result;
+		}
 	};
 
 	namespace Steam

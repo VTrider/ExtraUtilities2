@@ -21,6 +21,7 @@ local VarFlag = {}
 
 --- @class exu2
 --- @field VERSION string
+--- @field TerrainQueryResult TerrainQueryResult
 --- @field VarFlag VarFlag
 local exu2 = {}
 
@@ -144,9 +145,10 @@ function exu2.GetSteam64(team) end
 --- Terrain
 
 --- Queries if the tile closest to `pos` is valid for building the given `team` and `odf`. `front` is the direction
---- the building is facing. BUILDABLE if the tile is buildable and fills the out parameter `pos` with
---- the resulting build matrix position. Returns NOT_BUILDABLE if the tile is not buildable and `pos` is unmodified.
---- Returns INVALID_ODF if the odf does not have a GameObjectClass associated with it (probably malformed in some way)
+--- the building is facing.
+--- Returns the resulting build matrix position and BUILDABLE if the tile is buildable.
+--- Returns nil and NOT_BUILDABLE if the tile is not buildable.
+--- Returns nil and INVALID_ODF if the odf does not have a GameObjectClass associated with it (probably malformed in some way).
 --- IMPORTANT NOTE if you don't want the game to stutter the first time you call this function for a given odf,
 --- make sure to call PreloadODF(odf) in InitialSetup/Start or wherever you want beforehand.
 --- @param team integer

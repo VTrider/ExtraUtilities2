@@ -128,6 +128,8 @@ namespace exu2
 
 	// Helpers for common directories that mods usually use
 	const std::filesystem::path GetBZCCPath();
+	// WARNING: if the user has the `-novista` launch option this will result in all reads and writes
+	// to this directory and its children being redirected to `../steamapps/common/BZ2R`
 	const std::filesystem::path GetMyDocs();
 	const std::filesystem::path GetWorkshopPath();
 

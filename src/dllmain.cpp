@@ -20,7 +20,8 @@ namespace exu2
 			MessageBoxW(NULL, message.c_str(), L"Extra Utilities 2", MB_APPLMODAL | MB_ICONERROR);
 			std::terminate();
 		}
-		PrintConsoleMessage("Running Extra Utilities 2 v{} by VTrider", GetDLLVersion());
+		if (!exu2::detail::noSplashText)
+			PrintConsoleMessage("Running Extra Utilities 2 v{} by VTrider", GetDLLVersion());
 	}
 
 	void Shutdown()

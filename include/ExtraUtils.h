@@ -19,15 +19,22 @@
 
 namespace exu2
 {
+	namespace detail
+	{
+		inline bool noSplashText = false;
+	}
+
 #ifndef EXU_EXPORTS
 	const std::filesystem::path GetWorkshopPath();
+
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
 	// respectively if you are using this library in a dll mission. By default this uses the 
 	// version of the library currently on the steam workshop. If you are using a custom or
 	// development build, you must set the dll directory accordingly. See the README on
 	// GitHub for more info.
-	inline void ProcessAttach(const std::filesystem::path& dllDirectory = GetWorkshopPath() / "3515140097" / "Bin")
+	inline void ProcessAttach(const std::filesystem::path& dllDirectory = GetWorkshopPath() / "3515140097" / "Bin",
+							  bool noSplashText = false)
 	{
 		SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
 								 LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 
@@ -35,6 +42,7 @@ namespace exu2
 								 LOAD_LIBRARY_SEARCH_USER_DIRS
         );
 		AddDllDirectory(dllDirectory.wstring().c_str());
+		detail::noSplashText = noSplashText;
 	}
 
 	inline void ProcessDetach()

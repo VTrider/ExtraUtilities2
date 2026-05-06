@@ -207,6 +207,7 @@ namespace exu2
 	// Uninstalls the installed global handler if it exists
 	EXUAPI void DLLAPI VarSys_UninstallGlobalHandler();
 
+	// TODO: Reverse the rest of the flags
 	enum class VarFlag : uint32_t {
 		CONST = 0x4,
 		NODELETE = 0x8000

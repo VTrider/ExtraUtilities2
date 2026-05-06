@@ -173,7 +173,7 @@ namespace BZCC
 			};
 
 			uint8_t pad_1[0x18];
-			uint32_t flags; // if 0x8000 is set, the var is NODELETE
+			uint32_t flags;
 		};
 
 		using FindVarItem_t = VarItem*(__fastcall*)(ConstName name);

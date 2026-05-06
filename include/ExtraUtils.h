@@ -55,7 +55,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.4.0";
+	constexpr const char* HEADER_VERSION = "1.5.0";
 #else
 	constexpr int MINIMUM_REQUIRED_VERSION = 185;
 #endif

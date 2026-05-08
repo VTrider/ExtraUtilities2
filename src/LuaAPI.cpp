@@ -275,7 +275,7 @@ namespace exu2::lua
 		bool status = lua_toboolean(L, 3);
 		switch (VarFlag flag = static_cast<VarFlag>(tryFlag))
 		{
-			case VarFlag::CONST: [[fallthrough]];
+			case VarFlag::CONST:
 			case VarFlag::NODELETE:
 			{
 				bool result = VarSys_SetVarFlag(name, flag, status);

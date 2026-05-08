@@ -83,7 +83,7 @@ namespace BZCC
 		using Find_t = GameObjectClass*(__fastcall*)(const char* odf);
 
 	public:
-		static inline Find_t Find = reinterpret_cast<Find_t>(moduleBase + 0x166E2B); // TODO: pattern scan, currently 204.0
+		static inline Find_t Find = reinterpret_cast<Find_t>(moduleBase + Offsets::GameObjectClass_Find);
 	};
 
 	namespace Mission
@@ -115,7 +115,7 @@ namespace BZCC
 
 		// WARNING: the base function uses a custom calling convention where the parameters are in fastcall order
 		// but the caller cleans up the stack, you should not use this directly
-		static inline const GoodSpot_t GoodSpotUnsafe = reinterpret_cast<GoodSpot_t>(moduleBase + 0x2A3CC0); // TODO: pattern scan, current offset is 204.0
+		static inline const GoodSpot_t GoodSpotUnsafe = reinterpret_cast<GoodSpot_t>(moduleBase + Offsets::SchedPlan_GoodSpot);
 
 	public:
 		// Wrapper over the game function that accounts for the custom calling convention

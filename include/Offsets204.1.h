@@ -16,4 +16,6 @@ namespace Offsets::V204_1
     constexpr uintptr_t activeConfigMod = 0x102708;
     constexpr uintptr_t misnExport = 0xA185A;
     constexpr uintptr_t globalHandler = 0x34BC3D;
+    constexpr uintptr_t GameObjectClass_Find = 0x1675DB;
+    constexpr uintptr_t SchedPlan_GoodSpot = 0x2A448D;
 } // namespace Offsets

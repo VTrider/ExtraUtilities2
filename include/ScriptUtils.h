@@ -117,7 +117,8 @@ enum PathType;
 #pragma warning (error : 4029) // Formal parameter types in the function declaration do not agree with those in the function definition. 
 #pragma warning (error : 4113) // A function pointer is assigned to another function pointer, but the formal parameter lists of the functions do not agree.  
 
-class GameObject;
+// VT: Wtf why is this defined here
+// class GameObject;
 class AiPath;
 
 // Make sure these are available

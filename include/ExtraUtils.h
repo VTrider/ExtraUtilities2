@@ -276,7 +276,9 @@ namespace exu2
 			{
 				const wchar_t* msg = L"Failed to find ExtraUtilities2.dll. This can happen if the workshop item "
 									  "is not installed, or if you are running a custom build and failed to set "
-									  "the dll search path. See the README on GitHub for more info.";
+									  "the dll search path. Please subscribe to the workshop item at " 
+								      "https://steamcommunity.com/sharedfiles/filedetails/?id=3515140097 "
+					                  "or see the README on GitHub for more info.";
 				MessageBoxW(NULL, msg, L"Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
 				std::terminate();
 			}

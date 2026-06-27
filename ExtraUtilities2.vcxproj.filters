@@ -98,6 +98,9 @@
     <ClInclude Include="include\Offsets204.1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Offsets205.3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\ExtraUtilities2.rc">

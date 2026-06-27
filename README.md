@@ -11,14 +11,15 @@ This mod targets the bleeding edge build of BZCC and should be able to update to
 ## Compatibility
 
 This mod is compatible with the following game versions. Notably 185 does not have LuaMission support due to inherent limitations of that version.
-I highly discourage targeting 185 for new mods, but if you still require 185 compatibility you can use a DLL mission.
+I highly discourage targeting 185 for new mods, but if you still require 185 compatibility you can use a DLL mission. If you need to use an outdated beta version
+look at previous releases to see if they are supported, otherwise it's unsupported.
 
 | | LuaMission | DLL Mission |
 | -| ---------- | ----------- |
 | 185 (Stock) | ❌ | ✅ |
 | 200 (Public Beta) | ✅ | ✅ |
-| 204.0 (Current Devtest) | ✅ | ✅ |
-| 204.1 (Private Beta) | ✅ | ✅ |
+| 205.3 (Current Devtest) | ✅ | ✅ |
+| 205.3 (Private Beta) | ✅ | ✅ |
 
 Only tested on Windows and Steam.
 

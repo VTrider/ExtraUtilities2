@@ -25,7 +25,7 @@
         {
             "name": "DeleteItem",
             "pattern": "85 C0 74 ?? 8B 48 40 50",
-            "offset": -11
+            "offset": -12
         },
         {
             "name": "CreateCmd",

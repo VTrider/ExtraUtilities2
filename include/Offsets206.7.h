@@ -8,7 +8,7 @@ namespace Offsets::V206_7
     constexpr uintptr_t GetArgFloat = 0x366569;
     constexpr uintptr_t GetArgInteger = 0x3667E1;
     constexpr uintptr_t GetArgString = 0x3667B0;
-    constexpr uintptr_t DeleteItem = 0x361A4E;
+    constexpr uintptr_t DeleteItem = 0x361A4D;
     constexpr uintptr_t CreateCmd = 0x361A6F;
     constexpr uintptr_t RegisterHandler = 0x3619AE;
     constexpr uintptr_t inSatellite = 0x289CD9;

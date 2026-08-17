@@ -5,6 +5,7 @@
 #include "Offsets204.0.h"
 #include "Offsets204.1.h"
 #include "Offsets205.3.h"
+#include "Offsets206.7.h"
 
 #include "ExtraUtils.h"
 
@@ -38,6 +39,10 @@
 		else if (minorVersion == 205 && exu2::GetGamePatchVersion() == 3) \
 		{ \
 			return Offsets::V205_3::##name; \
+		} \
+		else if (minorVersion == 206 && exu2::GetGamePatchVersion() == 7) \
+		{ \
+			return Offsets::V206_7::##name; \
 		} \
 		else \
 			std::terminate(); \

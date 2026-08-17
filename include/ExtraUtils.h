@@ -55,9 +55,9 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.5.0";
+	constexpr const char* HEADER_VERSION = "1.6.0";
 #else
-	constexpr int MINIMUM_REQUIRED_VERSION = 185;
+	constexpr int MINIMUM_REQUIRED_VERSION = 205;
 #endif
 
 	// Returns the minor version of the game, use this if your mod only supports a certain version(s)

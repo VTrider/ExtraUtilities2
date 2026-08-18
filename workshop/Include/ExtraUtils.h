@@ -19,15 +19,22 @@
 
 namespace exu2
 {
+	namespace detail
+	{
+		inline bool noSplashText = false;
+	}
+
 #ifndef EXU_EXPORTS
 	const std::filesystem::path GetWorkshopPath();
+
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
 	// respectively if you are using this library in a dll mission. By default this uses the 
 	// version of the library currently on the steam workshop. If you are using a custom or
 	// development build, you must set the dll directory accordingly. See the README on
 	// GitHub for more info.
-	inline void ProcessAttach(const std::filesystem::path& dllDirectory = GetWorkshopPath() / "3515140097" / "Bin")
+	inline void ProcessAttach(const std::filesystem::path& dllDirectory = GetWorkshopPath() / "3515140097" / "Bin",
+							  bool noSplashText = false)
 	{
 		SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_APPLICATION_DIR |
 								 LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | 
@@ -35,6 +42,7 @@ namespace exu2
 								 LOAD_LIBRARY_SEARCH_USER_DIRS
         );
 		AddDllDirectory(dllDirectory.wstring().c_str());
+		detail::noSplashText = noSplashText;
 	}
 
 	inline void ProcessDetach()
@@ -47,9 +55,9 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.4.0";
+	constexpr const char* HEADER_VERSION = "1.5.1";
 #else
-	constexpr int MINIMUM_REQUIRED_VERSION = 185;
+	constexpr int MINIMUM_REQUIRED_VERSION = 205;
 #endif
 
 	// Returns the minor version of the game, use this if your mod only supports a certain version(s)
@@ -128,6 +136,8 @@ namespace exu2
 
 	// Helpers for common directories that mods usually use
 	const std::filesystem::path GetBZCCPath();
+	// WARNING: if the user has the `-novista` launch option this will result in all reads and writes
+	// to this directory and its children being redirected to `../steamapps/common/BZ2R`
 	const std::filesystem::path GetMyDocs();
 	const std::filesystem::path GetWorkshopPath();
 
@@ -197,6 +207,7 @@ namespace exu2
 	// Uninstalls the installed global handler if it exists
 	EXUAPI void DLLAPI VarSys_UninstallGlobalHandler();
 
+	// TODO: Reverse the rest of the flags
 	enum class VarFlag : uint32_t {
 		CONST = 0x4,
 		NODELETE = 0x8000
@@ -265,7 +276,9 @@ namespace exu2
 			{
 				const wchar_t* msg = L"Failed to find ExtraUtilities2.dll. This can happen if the workshop item "
 									  "is not installed, or if you are running a custom build and failed to set "
-									  "the dll search path. See the README on GitHub for more info.";
+									  "the dll search path. Please subscribe to the workshop item at " 
+								      "https://steamcommunity.com/sharedfiles/filedetails/?id=3515140097 "
+					                  "or see the README on GitHub for more info.";
 				MessageBoxW(NULL, msg, L"Extra Utilities 2", MB_ICONERROR | MB_APPLMODAL);
 				std::terminate();
 			}

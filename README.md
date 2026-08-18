@@ -16,10 +16,10 @@ look at previous releases to see if they are supported, otherwise it's unsupport
 
 | | LuaMission | DLL Mission |
 | -| ---------- | ----------- |
-| 185 (Stock) | ❌ | ✅ |
-| 200 (Public Beta) | ✅ | ✅ |
-| 205.3 (Current Devtest) | ✅ | ✅ |
+| 185 (Stock) | ❌ | ⚠️ (up to 1.5.0) |
+| 200 (Public Beta) | ⚠️ (up to 1.5.0) | ⚠️ (up to 1.5.0) |
 | 205.3 (Private Beta) | ✅ | ✅ |
+| 206.7 (Devtest) | ✅ | ✅ |
 
 Only tested on Windows and Steam.
 

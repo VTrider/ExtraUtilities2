@@ -18,7 +18,7 @@ namespace exu2
 
 	uint64_t DLLAPI GetSteam64(int team)
 	{
-		if (IsNetworkOn())
+		if (IsNetworkOn() && GetPlayerHandle(team)) // make sure there's actually a player on that team first
 		{
 			BZCC::NetPlayerInfo* info = BZCC::NetPlayerInfo::netPlayerInfoArray[team];
 			return (info) ? info->steam64 : 0ULL;

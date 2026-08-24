@@ -19,7 +19,7 @@ look at previous releases to see if they are supported, otherwise it's unsupport
 | 185 (Stock) | ❌ | ⚠️ (up to 1.5.0) |
 | 200 (Public Beta) | ⚠️ (up to 1.5.0) | ⚠️ (up to 1.5.0) |
 | 205.3 (Private Beta) | ✅ | ✅ |
-| 206.7 (Devtest) | ✅ | ✅ |
+| 206.8 (Devtest) | ✅ | ✅ |
 
 Only tested on Windows and Steam.
 

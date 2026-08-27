@@ -55,7 +55,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.5.3";
+	constexpr const char* HEADER_VERSION = "1.6.0";
 #else
 	constexpr int MINIMUM_REQUIRED_VERSION = 205;
 #endif
@@ -75,6 +75,28 @@ namespace exu2
 	{
 		int x, y;
 	};
+
+	// Callbacks
+
+	enum class BuildEventType
+	{
+		QUEUE,
+		CANCEL,
+		BUILD
+	};
+
+	enum class ProducerType
+	{
+		FACTORY, // recycler is also a factory
+		CONSTRUCTOR,
+		ARMORY
+	};
+
+	// This callback records any build event from producers. IMPORTANT NOTE: `buildItemOdf` will always be defined,
+	// but the handle `buildItem` is ONLY defined for the event `BUILD`, it will instead be 0, due to the other events not having an object in the
+	// world yet.
+	using BuildEventCallback_t = void(*)(ProducerType producerType, Handle producer, BuildEventType event, const char* buildItemOdf, Handle buildItem);
+	EXUAPI void DLLAPI SetBuildEventCallback(BuildEventCallback_t callback);
 
 	// Camera
 
@@ -297,6 +319,52 @@ namespace exu2
 namespace std
 {
 	using namespace exu2;
+
+	template<>
+	struct formatter<BuildEventType> : formatter<string>
+	{
+		auto format(BuildEventType t, format_context& ctx) const
+		{
+			using enum BuildEventType;
+			std::string str;
+			switch (t)
+			{
+			case QUEUE:
+				str = "QUEUE";
+				break;
+			case CANCEL:
+				str = "CANCEL";
+				break;
+			case BUILD:
+				str = "BUILD";
+				break;
+			}
+			return format_to(ctx.out(), "{}", str);
+		}
+	};
+
+	template<>
+	struct formatter<ProducerType> : formatter<string>
+	{
+		auto format(ProducerType t, format_context& ctx) const
+		{
+			using enum ProducerType;
+			std::string str;
+			switch (t)
+			{
+			case FACTORY:
+				str = "FACTORY";
+				break;
+			case CONSTRUCTOR:
+				str = "CONSTRUCTOR";
+				break;
+			case ARMORY:
+				str = "ARMORY";
+				break;
+			}
+			return format_to(ctx.out(), "{}", str);
+		}
+	};
 
 	template <>
 	struct formatter<TerrainQueryResult>: formatter<string>

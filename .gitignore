@@ -462,3 +462,4 @@ FodyWeavers.xsd
 /Build
 .env
 workshop.vdf
+/vcpkg_installed

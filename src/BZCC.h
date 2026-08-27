@@ -10,9 +10,7 @@
 
 namespace BZCC
 {
-	inline const HMODULE moduleHandle = GetModuleHandleW(L"battlezone2.exe");
-	inline const uintptr_t steamAPIBase = reinterpret_cast<uintptr_t>(GetModuleHandleW(L"steam_api.dll"));
-	inline const uintptr_t moduleBase = reinterpret_cast<uintptr_t>(moduleHandle);
+	class GameObject;
 
 	class Camera
 	{
@@ -57,16 +55,20 @@ namespace BZCC
 		inline const GetArgString_t GetArgString = (GetArgString_t)(moduleBase + Offsets::GetArgString);
 	}
 
+
 	class GameObjectClass;
 
+#pragma pack(push, 1)
 	class GameObject
 	{
 	private:
 		using GetObj_t = GameObject*(__fastcall*)(Handle h);
 
 	public:
-		uint8_t pad_1[0x11E];
+		char pad_0[0x120];
 		GameObjectClass* objClass; // UNTESTED
+		char pad_128[0x1BC];
+		Handle handle;
 
 		static inline const GetObj_t GetObj = []() // UNTESTED
 		{
@@ -76,6 +78,7 @@ namespace BZCC
 			return reinterpret_cast<GetObj_t>(next_instruction + relative_jmp_offset);
 		}();
 	};
+#pragma pack(pop)
 
 	class GameObjectClass 
 	{
@@ -83,7 +86,16 @@ namespace BZCC
 		using Find_t = GameObjectClass*(__fastcall*)(const char* odf);
 
 	public:
+		uint8_t pad_1[0x28];
+		char config[64]; // ivtank_vsr.odf:1 // note the appended colon, no idea what this means
+		char odf[64];    // ivtank_vsr.odf   // this is usually what you want
+
 		static inline Find_t Find = reinterpret_cast<Find_t>(moduleBase + Offsets::GameObjectClass_Find);
+	};
+
+	class Factory : public GameObject
+	{
+
 	};
 
 	namespace Mission

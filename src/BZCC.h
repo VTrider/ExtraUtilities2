@@ -119,6 +119,15 @@ namespace BZCC
 	};
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+	struct RigBuild {
+	private: char pad_0[0x14]; public:
+		BZCC::GameObject* constructor; // 0x14
+	private: char pad_18[0x168]; public:
+		BZCC::GameObjectClass* buildClass; // 0x180
+	}; // Size: 0x184
+#pragma pack(pop)
+
 	class SchedPlan
 	{
 	private:

@@ -95,6 +95,9 @@ namespace exu2
 	// This callback records any build event from producers. IMPORTANT NOTE: `buildItemOdf` will always be defined,
 	// but the handle `buildItem` is ONLY defined for the event `BUILD`, it will instead be 0, due to the other events not having an object in the
 	// world yet.
+	// I'm pretty sure this WONT work with hover constructors, but since they are so rare I don't really care to implement it unless it's despra
+	// 
+	// When cancelling stacks of units from the recycler/factory, this callback will be called multiple times corresponding to how many units were in the stack.
 	using BuildEventCallback_t = void(*)(ProducerType producerType, Handle producer, BuildEventType event, const char* buildItemOdf, Handle buildItem);
 	EXUAPI void DLLAPI SetBuildEventCallback(BuildEventCallback_t callback);
 

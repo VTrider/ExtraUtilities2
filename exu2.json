@@ -86,6 +86,21 @@
             "name": "Factory_QueueBuild",
             "pattern": "53 56 8B 75 08 89 75 F8",
             "offset": -16
+        },
+        {
+            "name": "Armory_CancelBuild",
+            "pattern": "89 45 FC 53 56 8B F1 57 83 BE ?? ?? 00 00 00 75",
+            "offset": -16
+        },
+        {
+            "name": "Constructor_CancelBuild",
+            "pattern": "C7 06 ?? ?? ?? ?? 89 9E ?? ?? 00 00 8B FA AB AB",
+            "offset": 2
+        },
+        {
+            "name": "Factory_CancelBuild",
+            "pattern": "57 83 BE ?? ?? 00 00 00 0F 84 ?? ?? ?? ?? 8B 9E ?? ?? 00 00",
+            "offset": -4
         }
     ]
 }

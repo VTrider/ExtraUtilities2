@@ -54,6 +54,13 @@ namespace exu2
 		return armoryCancelHook.thiscall<bool>(self);
 	}
 
+	void __fastcall ConstructorCancelHook(RigBuild* self, [[maybe_unused]] int edx)
+	{
+		if (buildEventCallback)
+			buildEventCallback(ProducerType::CONSTRUCTOR, self->constructor->handle, BuildEventType::CANCEL, self->buildClass->odf, 0);
+		return constructorCancelHook.thiscall<void>(self);
+	}
+
 	bool __fastcall FactoryCancelHook(Factory* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
@@ -81,7 +88,7 @@ namespace exu2
 		// Note that we're actually using StartBuild because this has the expected behavior of triggering when the player
 		// confirms a build with space bar, while QueueBuild is fired off every time the player selects a weapon in the armory menu even if they don't confirm it
 		if (!armoryQueueHook.target())
-			armoryQueueHook = safetyhook::create_inline(BZCC::moduleBase + 0x13C55C, ArmoryQueueHook); // 205.3 offset temp
+			armoryQueueHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Armory_StartBuild, ArmoryQueueHook);
 
 		if (!constructorQueueHook.target())
 			constructorQueueHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Constructor_QueueBuild, ConstructorQueueHook);
@@ -89,10 +96,13 @@ namespace exu2
 		if (!factoryQueueHook.target())
 			factoryQueueHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Factory_QueueBuild, FactoryQueueHook);
 
-		if (!factoryCancelHook.target())
-			factoryCancelHook = safetyhook::create_inline(BZCC::moduleBase + 0x160AC3, FactoryCancelHook);
-
 		if (!armoryCancelHook.target())
-			armoryCancelHook = safetyhook::create_inline(BZCC::moduleBase + 0x13C6D5, ArmoryCancelHook);
+			armoryCancelHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Armory_CancelBuild, ArmoryCancelHook);
+
+		if (!constructorCancelHook.target())
+			constructorCancelHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Constructor_CancelBuild, ConstructorCancelHook);
+
+		if (!factoryCancelHook.target())
+			factoryCancelHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Factory_CancelBuild, FactoryCancelHook);
 	}
 }

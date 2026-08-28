@@ -44,14 +44,26 @@ namespace Offsets
 	inline const uintptr_t globalHandler          = RESOLVE_VERSIONED_OFFSET(globalHandler);
 	inline const uintptr_t GameObjectClass_Find   = RESOLVE_VERSIONED_OFFSET(GameObjectClass_Find);
 	inline const uintptr_t SchedPlan_GoodSpot     = RESOLVE_VERSIONED_OFFSET(SchedPlan_GoodSpot);
-	inline const uintptr_t Armory_QueueBuild      = RESOLVE_VERSIONED_OFFSET(Armory_QueueBuild);
+	inline const uintptr_t Armory_StartBuild      = RESOLVE_VERSIONED_OFFSET(Armory_StartBuild);
 	inline const uintptr_t Constructor_QueueBuild = []()
 	{
 		// Notes from ghidra: rel32-call: target = match + 0xC + signed read_i32(match + 0x8)
 		uintptr_t match = BZCC::moduleBase + RESOLVE_VERSIONED_OFFSET(Constructor_QueueBuild);
-		intptr_t offset = *reinterpret_cast<intptr_t*>(match + 0x8);
+		intptr_t offset = *reinterpret_cast<intptr_t*>(match + 8);
 		// Subtract moduleBase from it to make it consistent with the other offsets that require you to add moduleBase before using them
 		return match + 0xC + offset - BZCC::moduleBase;
 	}();
-	inline const uintptr_t Factory_QueueBuild     = RESOLVE_VERSIONED_OFFSET(Factory_QueueBuild);
+	inline const uintptr_t Factory_QueueBuild       = RESOLVE_VERSIONED_OFFSET(Factory_QueueBuild);
+	inline const uintptr_t Armory_CancelBuild       = RESOLVE_VERSIONED_OFFSET(Armory_CancelBuild);
+	inline const uintptr_t Constructor_CancelBuild = []()
+	{
+		// Notes from ghidra: this offset is a pointer to the vftable for BuildRig, the vector destructor is the first entry in this,
+		// which is how we get to the normal BuildRig::~BuildRig() where the callback is.
+		// Then it's another rel32 call so we do the same processes as above.
+		uintptr_t match = BZCC::moduleBase + RESOLVE_VERSIONED_OFFSET(Constructor_CancelBuild);
+		uintptr_t vectorDestructor = **reinterpret_cast<uintptr_t**>(match);
+		intptr_t offset = *reinterpret_cast<intptr_t*>(vectorDestructor + 7);
+		return vectorDestructor + 11 + offset - BZCC::moduleBase;
+	}();
+	inline const uintptr_t Factory_CancelBuild      = RESOLVE_VERSIONED_OFFSET(Factory_CancelBuild);
 }

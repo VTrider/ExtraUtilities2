@@ -98,7 +98,7 @@ namespace exu2
 	// I'm pretty sure this WONT work with hover constructors, but since they are so rare I don't really care to implement it unless it's despra
 	// 
 	// When cancelling stacks of units from the recycler/factory, this callback will be called multiple times corresponding to how many units were in the stack.
-	using BuildEventCallback_t = void(*)(ProducerType producerType, Handle producer, BuildEventType event, const char* buildItemOdf, Handle buildItem);
+	using BuildEventCallback_t = void(*)(ProducerType producerType, Handle producer, int producerTeam, BuildEventType event, const char* buildItemOdf, Handle buildItem);
 	EXUAPI void DLLAPI SetBuildEventCallback(BuildEventCallback_t callback);
 
 	// Camera

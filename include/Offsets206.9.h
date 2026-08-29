@@ -22,6 +22,9 @@ namespace Offsets::V206_9
     constexpr uintptr_t Constructor_QueueBuild = 0xBE8A0;
     constexpr uintptr_t Factory_QueueBuild = 0x1621A5;
     constexpr uintptr_t Armory_CancelBuild = 0x13E114;
-    constexpr uintptr_t Constructor_CancelBuild = 0xC3E4E;
+    constexpr uintptr_t Constructor_CancelBuild = 0xBE72D;
     constexpr uintptr_t Factory_CancelBuild = 0x16252C;
+    constexpr uintptr_t Armory_FinishBuild = 0x13D627;
+    constexpr uintptr_t Constructor_FinishBuild = 0x14D095;
+    constexpr uintptr_t Factory_FinishBuild = 0x1610FD;
 } // namespace Offsets

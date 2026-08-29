@@ -24,4 +24,7 @@ namespace Offsets::V205_3
     constexpr uintptr_t Armory_CancelBuild = 0x13C6D5;
     constexpr uintptr_t Constructor_CancelBuild = 0xBE545;
     constexpr uintptr_t Factory_CancelBuild = 0x160AC3;
+    constexpr uintptr_t Armory_FinishBuild = 0x13BBE8;
+    constexpr uintptr_t Constructor_FinishBuild = 0x14B655;
+    constexpr uintptr_t Factory_FinishBuild = 0x15F694;
 } // namespace Offsets

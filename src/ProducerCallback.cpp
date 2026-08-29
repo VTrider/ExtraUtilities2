@@ -19,14 +19,14 @@ namespace exu2
 	SafetyHookInline constructorCancelHook;
 	SafetyHookInline factoryCancelHook;
 
-	SafetyHookInline armoryBuildHook;
+	SafetyHookMid armoryBuildHook;
 	SafetyHookInline constructorBuildHook;
 	SafetyHookInline factoryBuildHook;
 
 	bool __fastcall ArmoryQueueHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::ARMORY, self->handle, BuildEventType::QUEUE, GetBuildClass(self->handle), 0);
+			buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, GetBuildClass(self->handle), 0);
 		return armoryQueueHook.thiscall<bool>(self);
 	}
 
@@ -34,7 +34,7 @@ namespace exu2
 	bool __fastcall ConstructorQueueHook(GameObject* self, [[maybe_unused]] int edx, GameObjectClass* buildClass, GameObject* magic)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, BuildEventType::QUEUE, buildClass->odf, 0);
+			buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return constructorQueueHook.thiscall<bool>(self, buildClass, magic);
 	}
 
@@ -43,21 +43,27 @@ namespace exu2
 	bool __fastcall FactoryQueueHook(Factory* self, [[maybe_unused]] int edx, GameObjectClass* buildClass)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::FACTORY, self->handle, BuildEventType::QUEUE, buildClass->odf, 0);
+			buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return factoryQueueHook.thiscall<bool>(self, buildClass);
 	}
 
 	bool __fastcall ArmoryCancelHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::ARMORY, self->handle, BuildEventType::CANCEL, GetBuildClass(self->handle), 0);
+			buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, GetBuildClass(self->handle), 0);
 		return armoryCancelHook.thiscall<bool>(self);
 	}
 
 	void __fastcall ConstructorCancelHook(RigBuild* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::CONSTRUCTOR, self->constructor->handle, BuildEventType::CANCEL, self->buildClass->odf, 0);
+		{
+			// Important note: this callback has a false positive when a building is completed due to how fking janky it is, I guess because the destructor of
+			// RigBuild is called when a build is finished as well, BUT if the constructor ai cmd is CMD_NONE that indicates the build is finished, it will report
+			// CMD_DEPLOY if it is a real cancellation. Idk if any other ai cmds show up so I'll just say if it's not CMD_NONE then fire the callback, needs more testing.
+			if (GetCurrentCommand(self->constructor->handle) != CMD_NONE)
+				buildEventCallback(ProducerType::CONSTRUCTOR, self->constructor->handle, GetTeamNum(self->constructor->handle), BuildEventType::CANCEL, self->buildClass->odf, 0);
+		}
 		return constructorCancelHook.thiscall<void>(self);
 	}
 
@@ -75,10 +81,48 @@ namespace exu2
 				odfString = odfString.substr(0, odfString.find(':'));
 				odfString += ".odf";
 
-				buildEventCallback(ProducerType::FACTORY, self->handle, BuildEventType::CANCEL, odfString.c_str(), 0);
+				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, odfString.c_str(), 0);
 			}
 		}
 		return factoryCancelHook.thiscall<bool>(self);
+	}
+
+	// In hindsight the FinishBuild functions return the GameObject* so that probably would've been easier, oh whale
+	void ArmoryBuildHook(SafetyHookContext& ctx)
+	{
+		GameObject* armory = reinterpret_cast<GameObject*>(ctx.esi);
+		GameObject* powerup = reinterpret_cast<GameObject*>(ctx.ecx);
+
+		if (buildEventCallback)
+		{
+			char powerupOdf[64];
+			if (GetObjInfo(powerup->handle, Get_ODF, powerupOdf))
+				buildEventCallback(ProducerType::ARMORY, armory->handle, GetTeamNum(armory->handle), BuildEventType::BUILD, powerupOdf, powerup->handle);
+		}
+	}
+
+	GameObject* __fastcall ConstructorBuildHook(GameObject* self, [[maybe_unused]] int edx)
+	{
+		GameObject* builtObject = constructorBuildHook.thiscall<GameObject*>(self);
+		if (buildEventCallback)
+		{
+			char objectOdf[64];
+			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))
+				buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
+		}
+		return builtObject;
+	}
+
+	GameObject* __fastcall FactoryBuildHook(GameObject* self, [[maybe_unused]] int edx)
+	{
+		GameObject* builtObject = factoryBuildHook.thiscall<GameObject*>(self);
+		if (buildEventCallback)
+		{
+			char objectOdf[64];
+			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))
+				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
+		}
+		return builtObject;
 	}
 
 	void DLLAPI SetBuildEventCallback(BuildEventCallback_t callback)
@@ -104,5 +148,14 @@ namespace exu2
 
 		if (!factoryCancelHook.target())
 			factoryCancelHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Factory_CancelBuild, FactoryCancelHook);
+
+		if (!armoryBuildHook.target())
+			armoryBuildHook = safetyhook::create_mid(BZCC::moduleBase + Offsets::Armory_FinishBuild, ArmoryBuildHook);
+
+		if (!constructorBuildHook.target())
+			constructorBuildHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Constructor_FinishBuild, ConstructorBuildHook);
+
+		if (!factoryBuildHook.target())
+			factoryBuildHook = safetyhook::create_inline(BZCC::moduleBase + Offsets::Factory_FinishBuild, FactoryBuildHook);
 	}
 }

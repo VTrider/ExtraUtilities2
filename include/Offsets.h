@@ -66,4 +66,13 @@ namespace Offsets
 		return vectorDestructor + 11 + offset - BZCC::moduleBase;
 	}();
 	inline const uintptr_t Factory_CancelBuild      = RESOLVE_VERSIONED_OFFSET(Factory_CancelBuild);
+	inline const uintptr_t Armory_FinishBuild = RESOLVE_VERSIONED_OFFSET(Armory_FinishBuild);
+	inline const uintptr_t Constructor_FinishBuild = []()
+	{
+		// Same deal as before, the offset is to a unique constructor that references the vftable where the function we want is
+		uintptr_t match = BZCC::moduleBase + RESOLVE_VERSIONED_OFFSET(Constructor_FinishBuild);
+		uintptr_t vftable = *reinterpret_cast<uintptr_t*>(match);
+		return *reinterpret_cast<uintptr_t*>(vftable + 0x28C) - BZCC::moduleBase;
+	}();
+    inline const uintptr_t Factory_FinishBuild = RESOLVE_VERSIONED_OFFSET(Factory_FinishBuild);
 }

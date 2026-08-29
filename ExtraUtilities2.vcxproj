@@ -31,6 +31,7 @@
     <ClInclude Include="include\Offsets204.0.h" />
     <ClInclude Include="include\Offsets204.1.h" />
     <ClInclude Include="include\Offsets205.3.h" />
+    <ClInclude Include="include\Offsets206.10.h" />
     <ClInclude Include="include\Offsets206.7.h" />
     <ClInclude Include="include\Offsets206.8.h" />
     <ClInclude Include="include\Offsets206.9.h" />

@@ -92,6 +92,8 @@ namespace exu2
 		ARMORY
 	};
 
+	// TODO: implement lua api
+
 	// This callback records any build event from producers. IMPORTANT NOTE: `buildItemOdf` will always be defined,
 	// but the handle `buildItem` is ONLY defined for the event `BUILD`, it will instead be 0, due to the other events not having an object in the
 	// world yet.

@@ -12,10 +12,14 @@
 #include <delayimp.h>
 #undef CONST
 
+#include <concepts>
 #include <cstdint>
+#include <expected>
 #include <filesystem>
 #include <format>
 #include <string>
+#include <type_traits>
+#include <unordered_map>
 
 namespace exu2
 {
@@ -55,7 +59,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.6.0";
+	constexpr const char* HEADER_VERSION = "1.6.1";
 #else
 	constexpr int MINIMUM_REQUIRED_VERSION = 205;
 #endif
@@ -259,6 +263,66 @@ namespace exu2
 	inline int GetTPS()
 	{
 		return SecondsToTurns(1.0f);
+	}
+
+	namespace detail
+	{
+		class CachedODF
+		{
+		public:
+			CachedODF(const std::string& name) 
+				: name(name)
+			{
+				OpenODF(name.c_str());
+			}
+			~CachedODF()
+			{
+				CloseODF(name.c_str());
+			}
+
+		private:
+			std::string name;
+		};
+
+		inline std::unordered_map<std::string, CachedODF> odf_cache; // this will be closed automatically when the dll exits
+	}
+
+	enum class ODFError
+	{
+		VALUE_NOT_FOUND, // not found without inheritance
+		REACHED_BASE_ODF // not found through the entire inheritance tree
+	};
+
+	inline std::expected<float, ODFError> GetODFFloat(const std::string& odf, const std::string& block, const std::string& name, bool useInheritance = true)
+	{
+		if (!detail::odf_cache.contains(odf))
+			detail::odf_cache.emplace(odf, odf);
+
+		float value;
+
+		if (::GetODFFloat(odf.c_str(), block.c_str(), name.c_str(), &value))
+			return value;
+
+		if (!useInheritance)
+			return std::unexpected(ODFError::VALUE_NOT_FOUND);
+
+		std::string current_odf = odf;
+		char buf[ODF_MAX_LEN];
+		while (::GetODFString(current_odf.c_str(), "GameObjectClass", "classLabel", ODF_MAX_LEN, buf))
+		{
+			std::string parent = buf;
+			parent += ".odf";
+
+			if (!detail::odf_cache.contains(parent))
+				detail::odf_cache.emplace(parent, parent);
+
+			if (::GetODFFloat(parent.c_str(), block.c_str(), name.c_str(), &value))
+				return value;
+
+			current_odf = parent;
+		}
+
+		return std::unexpected(ODFError::REACHED_BASE_ODF);
 	}
 
 	// Do not modify

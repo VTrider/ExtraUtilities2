@@ -45,8 +45,8 @@ namespace exu2
 	bool __fastcall FactoryQueueHook(Factory* self, [[maybe_unused]] int edx, GameObjectClass* buildClass)
 	{
 		if (buildEventCallback)
-			if (const char* queuedItem = GetBuildClass(self->handle))
-				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
+			if (buildClass->odf)
+				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return factoryQueueHook.thiscall<bool>(self, buildClass);
 	}
 

@@ -25,7 +25,7 @@ namespace exu2
 
 	bool __fastcall ArmoryQueueHook(GameObject* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 			if (const char* queuedItem = GetBuildClass(self->handle))
 				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
 		return armoryQueueHook.thiscall<bool>(self);
@@ -34,7 +34,7 @@ namespace exu2
 	// No idea what the magic 3rd GameObject* does, untested probably best not to touch it
 	bool __fastcall ConstructorQueueHook(GameObject* self, [[maybe_unused]] int edx, GameObjectClass* buildClass, GameObject* magic)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 			if (buildClass && buildClass->odf)
 				buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return constructorQueueHook.thiscall<bool>(self, buildClass, magic);
@@ -44,7 +44,7 @@ namespace exu2
 	// in edx to get the real second parameter that's on the stack
 	bool __fastcall FactoryQueueHook(Factory* self, [[maybe_unused]] int edx, GameObjectClass* buildClass)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 			if (buildClass->odf)
 				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return factoryQueueHook.thiscall<bool>(self, buildClass);
@@ -52,7 +52,7 @@ namespace exu2
 
 	bool __fastcall ArmoryCancelHook(GameObject* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 			if (const char* queuedItem = GetBuildClass(self->handle))
 				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, queuedItem, 0);
 		return armoryCancelHook.thiscall<bool>(self);
@@ -60,7 +60,7 @@ namespace exu2
 
 	void __fastcall ConstructorCancelHook(RigBuild* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 		{
 			// Important note: this callback has a false positive when a building is completed due to how fking janky it is, I guess because the destructor of
 			// RigBuild is called when a build is finished as well, BUT if the constructor ai cmd is CMD_NONE that indicates the build is finished, it will report
@@ -73,7 +73,7 @@ namespace exu2
 
 	bool __fastcall FactoryCancelHook(Factory* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 		{
 			for (int i = 0; i < 10; i++)
 			{
@@ -97,7 +97,7 @@ namespace exu2
 		GameObject* armory = reinterpret_cast<GameObject*>(ctx.esi);
 		GameObject* powerup = reinterpret_cast<GameObject*>(ctx.ecx);
 
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 		{
 			char powerupOdf[64];
 			if (GetObjInfo(powerup->handle, Get_ODF, powerupOdf))
@@ -108,7 +108,7 @@ namespace exu2
 	GameObject* __fastcall ConstructorBuildHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		GameObject* builtObject = constructorBuildHook.thiscall<GameObject*>(self);
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 		{
 			char objectOdf[64];
 			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))
@@ -120,7 +120,7 @@ namespace exu2
 	GameObject* __fastcall FactoryBuildHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		GameObject* builtObject = factoryBuildHook.thiscall<GameObject*>(self);
-		if (buildEventCallback)
+		if (buildEventCallback && IsLockstepWorld())
 		{
 			char objectOdf[64];
 			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))

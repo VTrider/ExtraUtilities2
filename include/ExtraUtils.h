@@ -265,6 +265,13 @@ namespace exu2
 		return SecondsToTurns(1.0f);
 	}
 
+	// Still not sure the implications of the different worlds but I think you should only
+	// do important stuff in world 0 (lockstep world)
+	inline bool IsLockstepWorld()
+	{
+		return GetCurWorld() == 0;
+	}
+
 	namespace detail
 	{
 		class CachedODF

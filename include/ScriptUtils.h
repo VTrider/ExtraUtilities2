@@ -117,8 +117,7 @@ enum PathType;
 #pragma warning (error : 4029) // Formal parameter types in the function declaration do not agree with those in the function definition. 
 #pragma warning (error : 4113) // A function pointer is assigned to another function pointer, but the formal parameter lists of the functions do not agree.  
 
-// VT: Wtf why is this defined here
-// class GameObject;
+class GameObject;
 class AiPath;
 
 // Make sure these are available
@@ -366,6 +365,12 @@ typedef PreGetInReturnCodes (DLLAPI *PreGetInCallback)(const int curWorld, Handl
 // detailing what to do.
 typedef PrePickupPowerupReturnCodes (DLLAPI *PrePickupPowerupCallback)(const int curWorld, Handle me, Handle powerupHandle);
 
+// Typedef for the PostPickupPowerup callback - allows the DLL to be
+// notified and/or do logic when a pilot/craft sucessfully picks up a
+// powerup. Is passed the current world (0=lockstep, 1 or 2 = visual
+// world), two handles ( and empty craft).
+typedef void (DLLAPI *PostPickupPowerupCallback)(const int curWorld, Handle me, Handle powerupHandle);
+
 // Typedef for the PostTargetChanged callback. Is passed the handle of
 // the pilot/craft changing targets, and two handles -- previous &
 // current target. Returns nothing.
@@ -459,26 +464,28 @@ struct MisnExport {
 // callbacks to set these extra handlers below.
 struct MisnExport2 
 {
-	ChatMessageSentCallback		m_pChatMessageSentCallback;
 	PostTargetChangedCallback	m_pPostTargetChangedCallback;
 	PreGetInCallback			m_pPreGetInCallback;
 	PreOrdnanceHitCallback		m_pPreOrdnanceHitCallback;
 	PrePickupPowerupCallback	m_pPrePickupPowerupCallback;
 	PreSnipeCallback			m_pPreSnipeCallback;
+	ChatMessageSentCallback		m_pChatMessageSentCallback;
 	PostBulletInitCallback		m_pPostBulletInitCallback;
 	PreDamageCallback			m_pPreDamageCallback;
+	PostPickupPowerupCallback	m_pPostPickupPowerupCallback;
 
 	// Constructor - sets all callbacks to unsubscribed
 	MisnExport2()
 	{
-		m_pChatMessageSentCallback = NULL;
 		m_pPostTargetChangedCallback = NULL;
 		m_pPreGetInCallback = NULL;
 		m_pPreOrdnanceHitCallback = NULL;
 		m_pPrePickupPowerupCallback = NULL;
 		m_pPreSnipeCallback = NULL;
+		m_pChatMessageSentCallback = NULL;
 		m_pPostBulletInitCallback = NULL;
 		m_pPreDamageCallback = NULL;
+		m_pPostPickupPowerupCallback = NULL;
 	}
 };
 
@@ -2528,6 +2535,22 @@ DLLEXPORT void DLLAPI SetPrePickupPowerupCallback(PrePickupPowerupCallback callb
 
 
 // Callback to set item in MisnExport2 - notes that the DLL would like
+// to set a PostPowerupPickup callback. This may by NULL if the DLL
+// does not want to subscribe to these callbacks. DLLs do NOT have to
+// unregister themselves before unloading; when the DLL is unloaded by
+// bzone.exe/bz2edit.exe, all callbacks are automatically cleared.
+//
+// PostPowerupPickup is called when a pilot/craft successfully picks up a
+// power up, and all other checks have passed.
+//
+// !! Note : If DLLs want to do any actions to the world based on this
+// PostPowerupPickup callback, they should (1) Ensure curWorld == 0
+// (lockstep) -- do NOTHING if curWorld is != 0, and (2) probably
+// queue up an action to do in the next Execute() call.
+DLLEXPORT void DLLAPI SetPostPickupPowerupCallback(PostPickupPowerupCallback callback);
+
+
+// Callback to set item in MisnExport2 - notes that the DLL would like
 // to set a PostTargetChanged callback. This may by NULL if the DLL
 // does not want to subscribe to these callbacks. DLLs do NOT have to
 // unregister themselves before unloading; when the DLL is unloaded by
@@ -3074,5 +3097,25 @@ DLLEXPORT void DLLAPI IFace_SetViewerModelAngleLimits(ConstName name, const floa
 
 // Gets which controls are currently set by the handle. Returns all blank controls (0's) if not a valid handle or not a craft.
 DLLEXPORT VehicleControls DLLAPI GetControls(Handle h);
+
+// see what command a unit is qued next. 
+// Returns CMD_NONE (0) if invalid handle.
+//
+// AiCommand what = GetNextCommand(friend1);
+// if (what == CMD_NONE)
+// Attack(friend1, enemy1);
+DLLEXPORT AiCommand DLLAPI GetNextCommand(Handle me);
+
+// get the target of a units next command.
+// Returns 0 if invalid handle.
+DLLEXPORT Handle DLLAPI GetNextWho(Handle me);
+
+// Get the target of a unit's next command. If the command doesn't
+// take a where when created, then this position will tend to be its
+// current 3D position (X,Y,Z). If the handle is invalid, returns
+// (0,0,0). Note that BZ2's AI is 2D, so the Y component of this
+// vector will always be zero if it has a where and an AiPath, not
+// actual terrain height.
+DLLEXPORT Vector DLLAPI GetNextCommandWhere(Handle h);
 
 #endif

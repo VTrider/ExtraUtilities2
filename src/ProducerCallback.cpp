@@ -26,7 +26,8 @@ namespace exu2
 	bool __fastcall ArmoryQueueHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, GetBuildClass(self->handle), 0);
+			if (const char* queuedItem = GetBuildClass(self->handle))
+				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
 		return armoryQueueHook.thiscall<bool>(self);
 	}
 
@@ -34,7 +35,8 @@ namespace exu2
 	bool __fastcall ConstructorQueueHook(GameObject* self, [[maybe_unused]] int edx, GameObjectClass* buildClass, GameObject* magic)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
+			if (buildClass && buildClass->odf)
+				buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return constructorQueueHook.thiscall<bool>(self, buildClass, magic);
 	}
 
@@ -43,14 +45,16 @@ namespace exu2
 	bool __fastcall FactoryQueueHook(Factory* self, [[maybe_unused]] int edx, GameObjectClass* buildClass)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
+			if (const char* queuedItem = GetBuildClass(self->handle))
+				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
 		return factoryQueueHook.thiscall<bool>(self, buildClass);
 	}
 
 	bool __fastcall ArmoryCancelHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		if (buildEventCallback)
-			buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, GetBuildClass(self->handle), 0);
+			if (const char* queuedItem = GetBuildClass(self->handle))
+				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, queuedItem, 0);
 		return armoryCancelHook.thiscall<bool>(self);
 	}
 

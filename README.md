@@ -19,7 +19,7 @@ look at previous releases to see if they are supported, otherwise it's unsupport
 | 185 (Stock) | ❌ | ⚠️ (up to 1.5.0) |
 | 200 (Public Beta) | ⚠️ (up to 1.5.0) | ⚠️ (up to 1.5.0) |
 | 205.3 (Private Beta) | ✅ | ✅ |
-| 206.8 (Devtest) | ✅ | ✅ |
+| 206.10 (Devtest) | ✅ | ✅ |
 
 Only tested on Windows and Steam.
 
@@ -64,7 +64,7 @@ debugging symbols.
 
 In Visual Studio:
 
-- Make sure your C++ version is at least C++20
+- Set latest C++ standard
 - Copy `ExtraUtils.h` into your include directory
 - Copy `ExtraUtilities2.lib` into your lib directory
 - In your project settings go to `Linker -> input` and under `Additional Dependencies` add `ExtraUtilities2.lib`, then under `Delay Loaded Dlls` add `ExtraUtilities2.dll`

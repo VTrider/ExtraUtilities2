@@ -25,18 +25,18 @@ namespace exu2
 
 	bool __fastcall ArmoryQueueHook(GameObject* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 			if (const char* queuedItem = GetBuildClass(self->handle))
-				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
+				buildEventCallback(GetCurWorld(), ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, queuedItem, 0);
 		return armoryQueueHook.thiscall<bool>(self);
 	}
 
 	// No idea what the magic 3rd GameObject* does, untested probably best not to touch it
 	bool __fastcall ConstructorQueueHook(GameObject* self, [[maybe_unused]] int edx, GameObjectClass* buildClass, GameObject* magic)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 			if (buildClass && buildClass->odf)
-				buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
+				buildEventCallback(GetCurWorld(), ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return constructorQueueHook.thiscall<bool>(self, buildClass, magic);
 	}
 
@@ -44,36 +44,36 @@ namespace exu2
 	// in edx to get the real second parameter that's on the stack
 	bool __fastcall FactoryQueueHook(Factory* self, [[maybe_unused]] int edx, GameObjectClass* buildClass)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 			if (buildClass->odf)
-				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
+				buildEventCallback(GetCurWorld(), ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::QUEUE, buildClass->odf, 0);
 		return factoryQueueHook.thiscall<bool>(self, buildClass);
 	}
 
 	bool __fastcall ArmoryCancelHook(GameObject* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 			if (const char* queuedItem = GetBuildClass(self->handle))
-				buildEventCallback(ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, queuedItem, 0);
+				buildEventCallback(GetCurWorld(), ProducerType::ARMORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, queuedItem, 0);
 		return armoryCancelHook.thiscall<bool>(self);
 	}
 
 	void __fastcall ConstructorCancelHook(RigBuild* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 		{
 			// Important note: this callback has a false positive when a building is completed due to how fking janky it is, I guess because the destructor of
 			// RigBuild is called when a build is finished as well, BUT if the constructor ai cmd is CMD_NONE that indicates the build is finished, it will report
 			// CMD_DEPLOY if it is a real cancellation. Idk if any other ai cmds show up so I'll just say if it's not CMD_NONE then fire the callback, needs more testing.
 			if (GetCurrentCommand(self->constructor->handle) != CMD_NONE)
-				buildEventCallback(ProducerType::CONSTRUCTOR, self->constructor->handle, GetTeamNum(self->constructor->handle), BuildEventType::CANCEL, self->buildClass->odf, 0);
+				buildEventCallback(GetCurWorld(), ProducerType::CONSTRUCTOR, self->constructor->handle, GetTeamNum(self->constructor->handle), BuildEventType::CANCEL, self->buildClass->odf, 0);
 		}
 		return constructorCancelHook.thiscall<void>(self);
 	}
 
 	bool __fastcall FactoryCancelHook(Factory* self, [[maybe_unused]] int edx)
 	{
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 		{
 			for (int i = 0; i < 10; i++)
 			{
@@ -85,7 +85,7 @@ namespace exu2
 				odfString = odfString.substr(0, odfString.find(':'));
 				odfString += ".odf";
 
-				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, odfString.c_str(), 0);
+				buildEventCallback(GetCurWorld(), ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::CANCEL, odfString.c_str(), 0);
 			}
 		}
 		return factoryCancelHook.thiscall<bool>(self);
@@ -97,22 +97,22 @@ namespace exu2
 		GameObject* armory = reinterpret_cast<GameObject*>(ctx.esi);
 		GameObject* powerup = reinterpret_cast<GameObject*>(ctx.ecx);
 
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 		{
 			char powerupOdf[64];
 			if (GetObjInfo(powerup->handle, Get_ODF, powerupOdf))
-				buildEventCallback(ProducerType::ARMORY, armory->handle, GetTeamNum(armory->handle), BuildEventType::BUILD, powerupOdf, powerup->handle);
+				buildEventCallback(GetCurWorld(), ProducerType::ARMORY, armory->handle, GetTeamNum(armory->handle), BuildEventType::BUILD, powerupOdf, powerup->handle);
 		}
 	}
 
 	GameObject* __fastcall ConstructorBuildHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		GameObject* builtObject = constructorBuildHook.thiscall<GameObject*>(self);
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 		{
 			char objectOdf[64];
 			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))
-				buildEventCallback(ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
+				buildEventCallback(GetCurWorld(), ProducerType::CONSTRUCTOR, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
 		}
 		return builtObject;
 	}
@@ -120,11 +120,11 @@ namespace exu2
 	GameObject* __fastcall FactoryBuildHook(GameObject* self, [[maybe_unused]] int edx)
 	{
 		GameObject* builtObject = factoryBuildHook.thiscall<GameObject*>(self);
-		if (buildEventCallback && IsLockstepWorld())
+		if (buildEventCallback)
 		{
 			char objectOdf[64];
 			if (GetObjInfo(builtObject->handle, Get_ODF, objectOdf))
-				buildEventCallback(ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
+				buildEventCallback(GetCurWorld(), ProducerType::FACTORY, self->handle, GetTeamNum(self->handle), BuildEventType::BUILD, objectOdf, builtObject->handle);
 		}
 		return builtObject;
 	}

@@ -77,7 +77,7 @@ namespace Offsets
 		// Same deal as before, the offset is to a unique constructor that references the vftable where the function we want is
 		uintptr_t match = BZCC::moduleBase + RESOLVE_VERSIONED_OFFSET(Constructor_FinishBuild);
 		uintptr_t vftable = *reinterpret_cast<uintptr_t*>(match);
-		return *reinterpret_cast<uintptr_t*>(vftable + 0x28C) - BZCC::moduleBase;
+		return *reinterpret_cast<uintptr_t*>(vftable + ((exu2::GetGameMinorVersion() == 205) ? 0x28C : 0x290)) /* this is fked I can't wait until I can remove this*/ - BZCC::moduleBase;
 	}();
     inline const uintptr_t Factory_FinishBuild = RESOLVE_VERSIONED_OFFSET(Factory_FinishBuild);
 }

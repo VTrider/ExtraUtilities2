@@ -42,7 +42,7 @@ namespace exu2
 
 	// Use this to compare against the DLL version. You should make sure that
 	// your header is up to date with the latest DLL.
-	constexpr const char* HEADER_VERSION = "1.6.3";
+	constexpr const char* HEADER_VERSION = "1.7.0";
 
 	// WARNING: You MUST call these two functions in DLL_PROCESS_ATTACH, and DLL_PROCESS_DETACH
 	// respectively if you are using this library in a dll mission. By default this uses the 
@@ -125,6 +125,41 @@ namespace exu2
 	// filter by world 0 (lockstep).
 	using BuildEventCallback_t = void(*)(int curWorld, ProducerType producerType, Handle producer, int producerTeam, BuildEventType event, const char* buildItemOdf, Handle buildItem);
 	EXUAPI void DLLAPI SetBuildEventCallback(BuildEventCallback_t callback);
+
+	enum class MagnetType
+	{
+		GUN,  // sonic wave
+		MINE, // mits/mcurt
+		SHELL // sonic blast
+	};
+
+	enum class MagnetTarget
+	{
+		GAME_OBJECT,
+		ORDNANCE
+	};
+
+	struct MagnetForceInfo
+	{
+		Handle magnetHandle; // ONLY defined for type MINE
+		Handle magnetOwner;
+		int magnetTeam;
+		const char* magnetOdf;
+
+		MagnetTarget targetType;
+		union
+		{
+			Handle targetHandle; // MagnetTarget::GAME_OBJECT
+			uintptr_t targetOrdnance; // MagnetTarget::ORDNANCE - Use this to differentiate between different events on the same ordnance
+		};
+		int targetTeam;
+		const char* targetOdf;
+	};
+
+	// Notes: the data in magnetInfo is undefined after the callback finishes, do not save pointers to any fields of the struct,
+	// including the strings. If you need to hold on to the data, make a copy.
+	using MagnetForceCallback_t = void(*)(MagnetType magnetType, const MagnetForceInfo* magnetInfo);
+	EXUAPI void DLLAPI SetMagnetForceCallback(MagnetForceCallback_t callback);
 
 	// Camera
 
@@ -414,6 +449,49 @@ namespace exu2
 namespace std
 {
 	using namespace exu2;
+
+	template<>
+	struct formatter<MagnetTarget> : formatter<string>
+	{
+		auto format(MagnetTarget t, format_context& ctx) const
+		{
+			using enum MagnetTarget;
+			std::string str;
+			switch (t)
+			{
+			case GAME_OBJECT:
+				str = "GAME_OBJECT";
+				break;
+			case ORDNANCE:
+				str = "ORDNANCE";
+				break;
+			}
+			return format_to(ctx.out(), "{}", str);
+		}
+	};
+
+	template<>
+	struct formatter<MagnetType> : formatter<string>
+	{
+		auto format(MagnetType t, format_context& ctx) const
+		{
+			using enum MagnetType;
+			std::string str;
+			switch (t)
+			{
+			case GUN:
+				str = "GUN";
+				break;
+			case MINE:
+				str = "MINE";
+				break;
+			case SHELL:
+				str = "SHELL";
+				break;
+			}
+			return format_to(ctx.out(), "{}", str);
+		}
+	};
 
 	template<>
 	struct formatter<BuildEventType> : formatter<string>

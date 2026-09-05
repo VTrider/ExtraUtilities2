@@ -163,6 +163,23 @@ namespace BZCC
 		inline const uint64_t* const steam64 = reinterpret_cast<uint64_t*>(steamAPIBase + 0x34690);
 	}
 
+#pragma pack(push, 1)
+	struct WeaponClass {
+	private: char pad_0[0x68]; public:
+		// Metadata: utf8*
+		char odf[64]; // 0x68
+	}; // Size: 0xa8
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+	struct Weapon {
+	private: char pad_0[0x3cc]; public:
+		BZCC::WeaponClass* wpnClass; // 0x3cc
+	private: char pad_3d0[0x60]; public:
+		BZCC::GameObject* owner; // 0x430
+	}; // Size: 0x434
+#pragma pack(pop)
+
 	namespace VarSys
 	{
 		using DeleteItem_t = bool(__cdecl*)(ConstName name);

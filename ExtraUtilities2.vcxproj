@@ -17,6 +17,7 @@
     <ClCompile Include="src\ExtraUtils.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\LuaAPI.cpp" />
+    <ClCompile Include="src\MagnetForceCallback.cpp" />
     <ClCompile Include="src\Mission.cpp" />
     <ClCompile Include="src\ProducerCallback.cpp" />
     <ClCompile Include="src\Steam.cpp" />

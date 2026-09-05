@@ -54,6 +54,9 @@
     <ClCompile Include="src\ProducerCallback.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="src\MagnetForceCallback.cpp">
+      <Filter>Source Files\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ExtraUtils.h">

@@ -77,6 +77,11 @@ namespace BZCC
 			uintptr_t relative_jmp_offset = *reinterpret_cast<uintptr_t*>(call_set_as_user + 1);
 			return reinterpret_cast<GetObj_t>(next_instruction + relative_jmp_offset);
 		}();
+
+		int GetTeamNum() const
+		{
+			return handle & 0xF; // why
+		}
 	};
 #pragma pack(pop)
 
@@ -117,6 +122,21 @@ namespace BZCC
 		// ONLY ACTIVE IN MP
 		static inline NetPlayerInfo** netPlayerInfoArray = *reinterpret_cast<NetPlayerInfo***>(moduleBase + Offsets::netPlayerInfoArray);
 	};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+	struct OrdnanceClass {
+	private: char pad_0[0x68]; public:
+		// Metadata: utf8*
+		char odf[64]; // 0x68
+	}; // Size: 0xa8
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+	struct Ordnance {
+	private: char pad_0[0x3cc]; public:
+		BZCC::OrdnanceClass* ordClass; // 0x3cc
+	}; // Size: 0x3d0
 #pragma pack(pop)
 
 #pragma pack(push, 1)

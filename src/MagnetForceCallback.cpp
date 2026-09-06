@@ -37,12 +37,11 @@ namespace exu2
 			magnetForceCallback(MagnetType::GUN, &info);
 	}
 
-	// TODO:
 	// Notes: MagnetGun* (this) in esi, Ordnance* (target) in edx
 	void MagnetGunOrdHook(SafetyHookContext& ctx)
 	{
 		Weapon* weapon = reinterpret_cast<Weapon*>(ctx.esi);
-		uintptr_t targetOrd = ctx.edx;
+		Ordnance* targetOrd = reinterpret_cast<Ordnance*>(ctx.edx);
 
 		MagnetForceInfo info{};
 		info.magnetHandle = 0;
@@ -51,16 +50,13 @@ namespace exu2
 		info.magnetOdf = weapon->wpnClass->odf;
 
 		info.targetType = MagnetTarget::ORDNANCE;
-		info.targetOrdnance = targetOrd;
-		info.targetTeam = GetTeamNum(info.targetHandle);
-		char odf[64];
-		if (GetObjInfo(info.targetHandle, Get_ODF, odf))
-			info.targetOdf = odf;
+		info.targetOrdnance = reinterpret_cast<uintptr_t>(targetOrd);
+		info.targetTeam = -1; // idk how to get this currently
+		info.targetOdf = targetOrd->ordClass->odf;
 
 		if (magnetForceCallback)
 			magnetForceCallback(MagnetType::GUN, &info);
 	}
-
 
 	void DLLAPI SetMagnetForceCallback(MagnetForceCallback_t callback)
 	{

@@ -54,9 +54,6 @@
     <ClCompile Include="src\ProducerCallback.cpp">
       <Filter>Source Files\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="src\MagnetForceCallback.cpp">
-      <Filter>Source Files\Modules</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ExtraUtils.h">
@@ -117,6 +114,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Offsets206.10.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Offsets207.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ScriptUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,7 @@
 
 namespace exu2
 {
-	constexpr const char* version = "1.6.4";
+	constexpr const char* version = "1.6.5";
 
 	EXUAPI int DLLAPI GetGameMinorVersion()
 	{

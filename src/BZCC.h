@@ -65,10 +65,10 @@ namespace BZCC
 		using GetObj_t = GameObject*(__fastcall*)(Handle h);
 
 	public:
-		char pad_0[0x120];
-		GameObjectClass* objClass; // UNTESTED
-		char pad_128[0x1BC];
-		Handle handle;
+		private: char pad_0[0x120]; public:
+		BZCC::GameObjectClass* objClass; // 0x120
+		private: char pad_124[0x1dc]; public:
+		Handle handle; // 0x300
 
 		static inline const GetObj_t GetObj = []() // UNTESTED
 		{
@@ -83,6 +83,8 @@ namespace BZCC
 			return handle & 0xF; // why
 		}
 	};
+
+
 #pragma pack(pop)
 
 	class GameObjectClass 

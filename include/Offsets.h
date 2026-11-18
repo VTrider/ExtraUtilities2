@@ -4,6 +4,7 @@
 #include "Offsets206.9.h"
 #include "Offsets206.10.h"
 #include "Offsets207.h"
+#include "Offsets208.h"
 
 #include "ExtraUtils.h"
 
@@ -33,6 +34,10 @@ namespace BZCC
 		else if (minorVersion == 207 && exu2::GetGamePatchVersion() == 0) \
 		{ \
 			return Offsets::V207::##name; \
+		} \
+		else if (minorVersion == 208 && exu2::GetGamePatchVersion() == 0) \
+		{ \
+			return Offsets::V208::##name; \
 		} \
 		else \
 			std::terminate(); \

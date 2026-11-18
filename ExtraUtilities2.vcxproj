@@ -36,6 +36,7 @@
     <ClInclude Include="include\Offsets206.8.h" />
     <ClInclude Include="include\Offsets206.9.h" />
     <ClInclude Include="include\Offsets207.h" />
+    <ClInclude Include="include\Offsets208.h" />
     <ClInclude Include="include\ScriptUtils.h" />
     <ClInclude Include="resource\resource.h" />
     <ClInclude Include="src\BasicPatch.h" />
